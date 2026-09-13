@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1E3A5F">
+<meta name="theme-color" content="#1a2744">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ต้นทุนผลิต">
@@ -11,48 +11,65 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>บัญชีต้นทุนผลิต</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
-/* ─── tokens ─── */
-:root {
-  --bg: #F4F1EC;
-  --card: #FFFFFF;
-  --card-b: #D4CFC7;
-  --hdr: #1E3A5F;
-  --hdr-t: #F0F4F8;
-  --dr: #2E6B9E;
-  --cr: #A83240;
-  --in-bg: #FFFCF0;
-  --au-bg: #ECF4EC;
-  --au-b: #8CB88C;
-  --txt: #2C2C2C;
-  --txt2: #7A7A72;
-  --lbl: #3A3A36;
-  --line: #2C2C2C;
-  --flash: #C8E6C8;
-  --div: #E8E4DC;
-  --neg: #A83240;
-  --fab-sh: rgba(0,0,0,.22);
-  --calc-num: #EDEAE4;
-  --calc-fn: transparent;
-  --nav-bg: #E8E4DC;
-  --nav-act: #1E3A5F;
-  --sub-act: #2E6B9E;
+/* ─── Ledger Paper ─── */
+:root{
+  --bg:#f5f0e6;--card:#fffdf8;--card-b:#c8c0ae;
+  --card-sh:0 1px 3px rgba(26,39,68,.06);
+  --hdr:#1a2744;--hdr-t:#f0ebe0;
+  --dr:#1a2744;--cr:#c2342e;
+  --in-bg:#fffcf5;--in-b:#c8c0ae;
+  --au-bg:transparent;--au-b:#b0a898;--au-t:#706a5e;
+  --txt:#2a2830;--txt2:#807a6e;--lbl:#4a4440;
+  --line:#1a2744;--rule:#d8d0c0;--acc:#7a9ec0;
+  --flash:#f0e8a0;--div:#d8d0c2;--neg:#c2342e;
+  --focus-c:#7a9ec0;--focus:rgba(122,158,192,.30);
+  --nav-act:#1a2744;--sub-act:#4a7aa0;
+  --fab-bg:#1a2744;--fab-t:#f0ebe0;--fab-sh:0 3px 12px rgba(26,39,68,.18);
+  --calc-num:#f0ebe0;--calc-fn:transparent;
+  --caret:#1a2744;--sel:rgba(122,158,192,.25);--sb:#c8c0ae;
+  --hl-bg:rgba(122,158,192,.15);--hl-b:#7a9ec0;--hl-sh:rgba(122,158,192,.18);
+  --num-ff:'Sarabun',system-ui,sans-serif;
 }
+
+/* ─── Financial Terminal ─── */
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#181B21;--card:#22262E;--card-b:#363B46;--hdr:#1B3354;--hdr-t:#D0D8E6;
-  --dr:#6BAFE0;--cr:#E8707C;--in-bg:#2C291E;--au-bg:#1C2B1C;--au-b:#4A8A4A;
-  --txt:#D4D4D4;--txt2:#828A9A;--lbl:#A8B0BC;--line:#6E7888;--flash:#284428;
-  --div:#363B46;--neg:#E8707C;--fab-sh:rgba(0,0,0,.45);--calc-num:#2E323A;--calc-fn:transparent;
-  --nav-bg:#2A2E36;--nav-act:#3A6BA8;--sub-act:#6BAFE0;
+  --bg:#141820;--card:#1c2230;--card-b:rgba(230,165,32,.10);
+  --card-sh:0 2px 8px rgba(0,0,0,.25),inset 0 1px 0 rgba(230,165,32,.04);
+  --hdr:#1a2030;--hdr-t:#e6a520;
+  --dr:#4da8b8;--cr:#e07070;
+  --in-bg:#161c28;--in-b:#2e3644;
+  --au-bg:rgba(104,168,104,.06);--au-b:#2e4a2e;--au-t:#68a868;
+  --txt:#ccc8c0;--txt2:#8a9098;--lbl:#8a8e98;
+  --line:#2e3644;--rule:#2a3040;--acc:#e6a520;
+  --flash:rgba(104,168,104,.15);--div:#2a3040;--neg:#e07070;
+  --focus-c:#e6a520;--focus:rgba(230,165,32,.25);
+  --nav-act:#e6a520;--sub-act:#e6a520;
+  --fab-bg:#e6a520;--fab-t:#141820;--fab-sh:0 3px 14px rgba(230,165,32,.25);
+  --calc-num:#1e2432;--calc-fn:transparent;
+  --caret:#e6a520;--sel:rgba(230,165,32,.2);--sb:#2e3644;
+  --hl-bg:rgba(230,165,32,.12);--hl-b:#e6a520;--hl-sh:rgba(230,165,32,.18);
+  --num-ff:'IBM Plex Mono',monospace;
 }}
 :root[data-theme="dark"]{
-  --bg:#181B21;--card:#22262E;--card-b:#363B46;--hdr:#1B3354;--hdr-t:#D0D8E6;
-  --dr:#6BAFE0;--cr:#E8707C;--in-bg:#2C291E;--au-bg:#1C2B1C;--au-b:#4A8A4A;
-  --txt:#D4D4D4;--txt2:#828A9A;--lbl:#A8B0BC;--line:#6E7888;--flash:#284428;
-  --div:#363B46;--neg:#E8707C;--fab-sh:rgba(0,0,0,.45);--calc-num:#2E323A;--calc-fn:transparent;
-  --nav-bg:#2A2E36;--nav-act:#3A6BA8;--sub-act:#6BAFE0;
+  --bg:#141820;--card:#1c2230;--card-b:rgba(230,165,32,.10);
+  --card-sh:0 2px 8px rgba(0,0,0,.25),inset 0 1px 0 rgba(230,165,32,.04);
+  --hdr:#1a2030;--hdr-t:#e6a520;
+  --dr:#4da8b8;--cr:#e07070;
+  --in-bg:#161c28;--in-b:#2e3644;
+  --au-bg:rgba(104,168,104,.06);--au-b:#2e4a2e;--au-t:#68a868;
+  --txt:#ccc8c0;--txt2:#8a9098;--lbl:#8a8e98;
+  --line:#2e3644;--rule:#2a3040;--acc:#e6a520;
+  --flash:rgba(104,168,104,.15);--div:#2a3040;--neg:#e07070;
+  --focus-c:#e6a520;--focus:rgba(230,165,32,.25);
+  --nav-act:#e6a520;--sub-act:#e6a520;
+  --fab-bg:#e6a520;--fab-t:#141820;--fab-sh:0 3px 14px rgba(230,165,32,.25);
+  --calc-num:#1e2432;--calc-fn:transparent;
+  --caret:#e6a520;--sel:rgba(230,165,32,.2);--sb:#2e3644;
+  --hl-bg:rgba(230,165,32,.12);--hl-b:#e6a520;--hl-sh:rgba(230,165,32,.18);
+  --num-ff:'IBM Plex Mono',monospace;
 }
 
 /* ─── base ─── */
@@ -60,142 +77,273 @@
 html,body{height:100%}
 body{font-family:'Sarabun',system-ui,sans-serif;background:var(--bg);color:var(--txt);
   line-height:1.5;font-variant-numeric:tabular-nums;
-  -webkit-tap-highlight-color:transparent}
+  -webkit-tap-highlight-color:transparent;padding-block:0}
+
+/* ─── browser surfaces ─── */
+::selection{background:var(--sel);color:var(--txt)}
+*{caret-color:var(--caret)}
+:focus-visible{outline:2px solid var(--focus-c);outline-offset:2px}
+input:focus-visible{outline:none}
+::-webkit-scrollbar{width:7px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--sb);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--txt2)}
 
 /* ─── app bar ─── */
 .bar{position:sticky;top:0;z-index:50;background:var(--hdr);color:var(--hdr-t);
-  padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;
-  box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.bar h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.01em;white-space:nowrap}
-.bar-btn{padding:5px 14px;border:1px solid rgba(255,255,255,.25);border-radius:4px;
+  padding:10px 16px;display:flex;align-items:center;gap:10px}
+.bar h1{margin:0;font-size:16px;font-weight:700;letter-spacing:.01em;white-space:nowrap;flex:1}
+.bar-r{display:flex;align-items:center;gap:6px}
+.bar-btn{padding:5px 12px;border:1px solid rgba(255,255,255,.18);border-radius:4px;
   background:transparent;color:var(--hdr-t);font-family:inherit;font-size:12px;
   font-weight:600;cursor:pointer;transition:background .15s}
-.bar-btn:hover{background:rgba(255,255,255,.1)}
+.bar-btn:hover{background:rgba(255,255,255,.08)}
+.bar-btn svg{display:block}
+.bar-btn.theme-btn{padding:5px 7px;display:flex;align-items:center;justify-content:center}
 
 /* ─── navigation ─── */
-.nav{display:flex;gap:4px;padding:8px 16px 6px;justify-content:center;flex-wrap:wrap}
-.nav-btn{padding:6px 18px;border:1px solid var(--card-b);border-radius:20px;
-  background:var(--card);color:var(--txt);font-family:inherit;font-size:13px;
-  font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
-.nav-btn:hover{background:var(--nav-bg)}
-.nav-btn.active{background:var(--nav-act);color:#fff;border-color:var(--nav-act)}
+.nav{display:flex;gap:0;padding:0 16px;justify-content:center;
+  border-bottom:1px solid var(--div);background:var(--card)}
+.nav-btn{padding:10px 20px;border:none;border-bottom:2px solid transparent;
+  background:transparent;color:var(--txt2);font-family:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:var(--txt)}
+.nav-btn.active{color:var(--nav-act);border-bottom-color:var(--nav-act)}
 
-.sub-nav{display:flex;gap:4px;padding:0 16px 8px;justify-content:center}
-.sub-btn{padding:4px 14px;border:1px solid var(--card-b);border-radius:14px;
+.sub-nav{display:flex;gap:0;padding:0 16px;justify-content:center;background:var(--card)}
+.sub-btn{padding:7px 16px;border:none;border-bottom:2px solid transparent;
   background:transparent;color:var(--txt2);font-family:inherit;font-size:12px;
-  font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
-.sub-btn:hover{border-color:var(--sub-act);color:var(--sub-act)}
-.sub-btn.active{background:var(--sub-act);color:#fff;border-color:var(--sub-act)}
+  font-weight:600;cursor:pointer;transition:color .15s,border-color .15s}
+.sub-btn:hover{color:var(--txt)}
+.sub-btn.active{color:var(--sub-act);border-bottom-color:var(--sub-act)}
 
 /* ─── content ─── */
-main{padding:8px 16px 68px;max-width:980px;margin:0 auto}
-.hint{text-align:center;font-size:12.5px;color:var(--txt2);margin:0 0 10px}
-.legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:11.5px;
+main{padding:14px 16px 68px;max-width:980px;margin:0 auto}
+.hint{text-align:center;font-size:12px;color:var(--txt2);margin:0 0 10px;line-height:1.5}
+.legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:11px;
   color:var(--txt2);margin-bottom:12px}
 .leg{display:flex;align-items:center;gap:5px}
-.sw{width:20px;height:14px;border-radius:3px;flex-shrink:0}
+.lsw{width:18px;height:12px;border-radius:2px;flex-shrink:0}
 
 /* ─── grid ─── */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
 @media(max-width:700px){.grid{grid-template-columns:1fr;gap:10px}}
 
 /* ─── T-account card ─── */
-.acct{background:var(--card);border:1px solid var(--card-b);border-radius:5px;overflow:hidden}
-.acct-n{background:var(--hdr);color:var(--hdr-t);padding:6px 10px;font-size:13px;
+.acct{background:var(--card);border:1px solid var(--card-b);border-radius:4px;
+  overflow:hidden;box-shadow:var(--card-sh);
+  animation:card-in .28s ease-out both}
+.acct:nth-child(2){animation-delay:.03s}
+.acct:nth-child(3){animation-delay:.06s}
+.acct:nth-child(4){animation-delay:.08s}
+.acct:nth-child(5){animation-delay:.10s}
+.acct:nth-child(6){animation-delay:.12s}
+.acct:nth-child(7){animation-delay:.13s}
+.acct:nth-child(8){animation-delay:.14s}
+.acct:nth-child(9){animation-delay:.15s}
+.acct:nth-child(10){animation-delay:.16s}
+.acct:nth-child(11){animation-delay:.17s}
+.acct:nth-child(12){animation-delay:.18s}
+@keyframes card-in{from{opacity:.6;transform:translateY(5px)}}
+@media(prefers-reduced-motion:reduce){.acct{animation:none}}
+
+.acct-n{background:var(--hdr);color:var(--hdr-t);padding:7px 10px;font-size:13px;
   font-weight:600;text-align:center;letter-spacing:.02em;line-height:1.35}
-.acct-n small{font-size:11px;font-weight:400;opacity:.85}
+.acct-n small{font-size:11px;font-weight:400;opacity:.8}
 .acct-b{display:grid;grid-template-columns:1fr 1fr}
 @media(max-width:460px){
   .acct-b{grid-template-columns:1fr}
-  .side.dr{border-right:none!important;border-bottom:2px solid var(--hdr)}
+  .side.dr{border-right:none!important;border-bottom:2px solid var(--line)}
 }
-.side{padding:6px 8px 8px;display:flex;flex-direction:column;gap:3px}
-.side.dr{border-right:2px solid var(--hdr)}
+.side{padding:7px 8px 8px;display:flex;flex-direction:column;gap:3px}
+.side.dr{border-right:2px solid var(--line)}
 .sh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
 .side.dr .sh{color:var(--dr)} .side.cr .sh{color:var(--cr)}
 
+/* ─── input rows ─── */
 .row{display:flex;align-items:center;gap:4px;font-size:12px}
 .row .lbl{flex:1;min-width:0;color:var(--lbl);line-height:1.3}
-.row input{width:70px;flex-shrink:0;text-align:right;padding:3px 5px;
-  border:1px solid var(--card-b);border-radius:3px;background:var(--in-bg);color:var(--txt);
-  font-family:inherit;font-size:12.5px;font-variant-numeric:tabular-nums;outline:none;
-  transition:border-color .15s,box-shadow .15s}
-.row input:focus{border-color:var(--dr);box-shadow:0 0 0 2px rgba(46,107,158,.12)}
-.row input[data-auto]{background:var(--au-bg);border-style:dashed;border-color:var(--au-b)}
-.row input[data-auto].override{background:var(--in-bg);border-style:solid;border-color:var(--card-b)}
+.row input{width:72px;flex-shrink:0;text-align:right;padding:4px 6px;
+  border:1px solid var(--in-b);border-radius:3px;background:var(--in-bg);color:var(--txt);
+  font-family:var(--num-ff);font-size:12.5px;font-variant-numeric:tabular-nums;
+  outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
+.row input:focus{border-color:var(--focus-c);box-shadow:0 0 0 2px var(--focus)}
+.row input[data-auto]{background:var(--au-bg);border-style:dashed;border-color:var(--au-b);color:var(--au-t)}
+.row input[data-auto].override{background:var(--in-bg);border-style:solid;border-color:var(--in-b);color:var(--txt)}
 .row input.flash{animation:pop .7s ease-out}
 @keyframes pop{0%,25%{background-color:var(--flash)}100%{background-color:var(--au-bg)}}
 
 .spacer{height:5px}
 .tot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;
-  padding-top:3px;border-top:1px solid var(--line);font-weight:700;font-size:12.5px}
-.tot .v{min-width:70px;text-align:right;padding:2px 5px 1px;border-bottom:3px double var(--line)}
+  padding-top:4px;border-top:1px solid var(--line);font-weight:700;font-size:12.5px}
+.tot .v{min-width:70px;text-align:right;padding:2px 6px 1px;
+  border-bottom:3px double var(--line);font-family:var(--num-ff);font-variant-numeric:tabular-nums}
 .tot .v.neg{color:var(--neg)}
 
 /* ─── FAB ─── */
-.fab{position:fixed;bottom:18px;right:18px;width:50px;height:50px;border-radius:50%;
-  background:var(--hdr);color:var(--hdr-t);border:none;font-size:22px;cursor:pointer;
-  box-shadow:0 3px 14px var(--fab-sh);z-index:90;display:flex;align-items:center;
-  justify-content:center;transition:transform .25s,opacity .2s}
-.fab:hover{transform:scale(1.06)}
-.fab:active{transform:scale(.95)}
+.fab{position:fixed;bottom:18px;right:18px;width:48px;height:48px;border-radius:50%;
+  background:var(--fab-bg);color:var(--fab-t);border:none;cursor:pointer;
+  box-shadow:var(--fab-sh);z-index:90;display:flex;align-items:center;
+  justify-content:center;transition:transform .22s ease,opacity .2s}
+.fab:hover{transform:scale(1.05)}
+.fab:active{transform:scale(.94)}
 .fab.gone{transform:scale(0) rotate(90deg);opacity:0;pointer-events:none}
+.fab svg{display:block}
 
 /* ─── calculator panel ─── */
-.calc{position:fixed;bottom:76px;right:14px;width:272px;background:var(--card);
-  border:1px solid var(--card-b);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.18);
-  z-index:100;transform:scale(.92) translateY(16px);opacity:0;pointer-events:none;
-  visibility:hidden;transition:transform .22s ease,opacity .22s ease,visibility 0s .22s}
+.calc{position:fixed;bottom:76px;right:14px;width:268px;background:var(--card);
+  border:1px solid var(--card-b);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.16);
+  z-index:100;transform:scale(.92) translateY(14px);opacity:0;pointer-events:none;
+  visibility:hidden;transition:transform .2s ease,opacity .2s ease,visibility 0s .2s}
 .calc.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto;
-  visibility:visible;transition:transform .22s ease,opacity .22s ease,visibility 0s 0s}
+  visibility:visible;transition:transform .2s ease,opacity .2s ease,visibility 0s 0s}
 @media(max-width:460px){.calc{right:8px;left:8px;width:auto;bottom:72px}}
 
-.calc-hd{background:var(--hdr);color:var(--hdr-t);padding:7px 12px;display:flex;
+.calc-hd{background:var(--hdr);color:var(--hdr-t);padding:8px 12px;display:flex;
   align-items:center;justify-content:space-between;font-size:13px;font-weight:600;
-  border-radius:12px 12px 0 0}
-.calc-x{background:none;border:none;color:var(--hdr-t);font-size:18px;cursor:pointer;
+  border-radius:10px 10px 0 0}
+.calc-x{background:none;border:none;color:var(--hdr-t);font-size:17px;cursor:pointer;
   padding:0 4px;opacity:.7;transition:opacity .15s}
 .calc-x:hover{opacity:1}
 
 .calc-scr{padding:10px 12px 6px;text-align:right;border-bottom:1px solid var(--div);
-  min-height:64px;display:flex;flex-direction:column;justify-content:flex-end}
-.calc-expr{font-size:12px;color:var(--txt2);min-height:16px;line-height:1.3;word-break:break-all}
-.calc-disp{font-size:28px;font-weight:700;color:var(--txt);line-height:1.15;
-  overflow-x:auto;white-space:nowrap}
+  min-height:62px;display:flex;flex-direction:column;justify-content:flex-end}
+.calc-expr{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--txt2);
+  min-height:16px;line-height:1.3;word-break:break-all}
+.calc-disp{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;
+  color:var(--txt);line-height:1.15;overflow-x:auto;white-space:nowrap}
 
-.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:6px 8px 4px}
-.ck{padding:12px 0;border:none;border-radius:6px;font-family:inherit;font-size:17px;
+.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px 8px 4px}
+.ck{padding:11px 0;border:none;border-radius:5px;font-family:inherit;font-size:16px;
   font-weight:600;cursor:pointer;background:var(--calc-num);color:var(--txt);
   transition:background .1s,transform .08s;-webkit-user-select:none;user-select:none}
 .ck:active{transform:scale(.94)}
-.ck.op{background:var(--dr);color:#fff}
+.ck.op{background:var(--acc);color:var(--bg)}
 .ck.eq{background:var(--hdr);color:var(--hdr-t)}
 .ck.fn{background:var(--calc-fn);color:var(--cr);font-weight:700}
 .ck.wide{grid-column:span 2}
 
-.calc-ins{display:block;width:calc(100% - 16px);margin:2px 8px 8px;padding:8px;
-  border:1px dashed var(--au-b);border-radius:6px;background:var(--au-bg);color:var(--txt);
+.calc-ins{display:block;width:calc(100% - 14px);margin:2px 7px 7px;padding:7px;
+  border:1px dashed var(--au-b);border-radius:5px;background:var(--au-bg);color:var(--txt);
   font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-align:center;
   transition:background .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .calc-ins:hover:not(:disabled){background:var(--flash)}
-.calc-ins:disabled{opacity:.45;cursor:default}
+.calc-ins:disabled{opacity:.4;cursor:default}
 
-/* ─── responsive tweaks ─── */
+/* ─── toolbar ─── */
+.toolbar{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+.tb-btn{padding:6px 14px;border:none;border-radius:4px;
+  background:transparent;color:var(--txt2);font-family:inherit;font-size:12px;
+  font-weight:600;cursor:pointer;transition:color .15s,background .15s}
+.tb-btn:hover{color:var(--txt);background:var(--div)}
+
+/* ─── save dialog ─── */
+.sdlg{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.4);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s .2s}
+.sdlg.open{opacity:1;visibility:visible;transition:opacity .2s,visibility 0s 0s}
+.sdlg-box{background:var(--card);border:1px solid var(--card-b);border-radius:8px;
+  padding:20px;width:min(340px,calc(100vw - 32px));box-shadow:0 8px 28px rgba(0,0,0,.16)}
+.sdlg-t{font-size:15px;font-weight:700;margin-bottom:14px}
+.sdlg-box label{display:block;font-size:12px;font-weight:600;color:var(--lbl);margin-bottom:4px}
+.sdlg-box input[type=text]{width:100%;padding:8px 10px;border:1px solid var(--in-b);border-radius:4px;
+  background:var(--in-bg);color:var(--txt);font-family:inherit;font-size:13px;margin-bottom:12px;outline:none}
+.sdlg-box input[type=text]:focus{border-color:var(--focus-c);box-shadow:0 0 0 2px var(--focus)}
+.sdlg-act{display:flex;gap:8px;justify-content:flex-end}
+.sdlg-act button{padding:7px 18px;border-radius:4px;font-family:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;border:1px solid var(--card-b);transition:all .15s}
+.sdlg-act .pri{background:var(--hdr);color:var(--hdr-t);border-color:var(--hdr)}
+.sdlg-act .pri:hover{opacity:.88}
+.sdlg-act .sec{background:var(--card);color:var(--txt)}
+.sdlg-act .sec:hover{background:var(--div)}
+
+/* ─── drawer ─── */
+.dw-ov{position:fixed;inset:0;z-index:180;background:rgba(0,0,0,.35);
+  opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
+.dw-ov.open{opacity:1;visibility:visible;transition:opacity .25s,visibility 0s}
+.dw{position:fixed;top:0;right:0;bottom:0;width:min(380px,85vw);z-index:190;
+  background:var(--card);border-left:1px solid var(--card-b);box-shadow:-4px 0 20px rgba(0,0,0,.08);
+  transform:translateX(100%);transition:transform .25s ease;overflow-y:auto}
+.dw-ov.open .dw{transform:translateX(0)}
+.dw-hd{background:var(--hdr);color:var(--hdr-t);padding:10px 16px;display:flex;
+  align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1}
+.dw-hd h2{font-size:14px;font-weight:700;margin:0}
+.dw-x{background:none;border:none;color:var(--hdr-t);font-size:17px;cursor:pointer;
+  padding:0 4px;opacity:.7;transition:opacity .15s}
+.dw-x:hover{opacity:1}
+.dw-body{padding:12px 16px}
+
+/* ─── saved-entries list ─── */
+.sv-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.sv-item{border:1px solid var(--card-b);border-radius:5px;padding:10px 12px;background:var(--bg);
+  transition:border-color .15s}
+.sv-item:hover{border-color:var(--acc)}
+.sv-nm{font-size:13px;font-weight:700;margin-bottom:2px}
+.sv-meta{font-size:11px;color:var(--txt2);margin-bottom:6px}
+.sv-acts{display:flex;gap:6px;flex-wrap:wrap}
+.sv-acts button{padding:4px 10px;border:1px solid var(--card-b);border-radius:3px;
+  background:var(--card);color:var(--txt);font-family:inherit;font-size:11px;
+  font-weight:600;cursor:pointer;transition:all .15s}
+.sv-acts button:hover{border-color:var(--acc);color:var(--acc)}
+.sv-acts .del{color:var(--neg)}
+.sv-acts .del:hover{border-color:var(--neg);color:var(--neg)}
+.no-sv{text-align:center;color:var(--txt2);font-size:13px;padding:20px 0}
+
+/* ─── terminology table ─── */
+.term-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.term-tbl th{text-align:left;padding:6px 8px;border-bottom:2px solid var(--line);
+  color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.term-tbl td{padding:5px 8px;border-bottom:1px solid var(--div)}
+.term-tbl tr:last-child td{border-bottom:none}
+.term-tbl .abbr{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--dr);white-space:nowrap}
+.term-tbl .en{color:var(--txt2);font-size:11.5px}
+
+/* ─── hover-linked highlight ─── */
+.row input.hl{background:var(--hl-bg)!important;border-color:var(--hl-b)!important;
+  box-shadow:0 0 0 2px var(--hl-sh)!important;transition:all .12s ease}
+
+/* ─── responsive ─── */
 @media(max-width:460px){
-  .row input,.tot .v{width:60px;min-width:60px;font-size:11.5px}
+  .row input,.tot .v{width:62px;min-width:62px;font-size:11.5px}
   .row .lbl{font-size:11px}
   .acct-n{font-size:12px}
-  .bar h1{font-size:15px}
-  .nav-btn{padding:5px 12px;font-size:12px}
+  .bar h1{font-size:14px}
+  .nav-btn{padding:8px 14px;font-size:12px}
+  .sub-btn{padding:6px 12px;font-size:11px}
 }
+
+/* ─── print ─── */
+@media print{
+  .bar-btn,.fab,.calc,.toolbar,.nav,.sub-nav,.hint,.legend,.dw-ov,.sdlg{display:none!important}
+  .bar{position:static;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  body{background:#fff!important;padding:0}
+  main{padding:8px 0;max-width:100%}
+  .grid{gap:8px}
+  .acct{break-inside:avoid;page-break-inside:avoid;animation:none}
+  .acct-n{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .side.dr{border-right:2px solid #1a2744!important}
+  .row input{border:none!important;background:transparent!important;padding:2px 4px;
+    font-size:11px;box-shadow:none!important;color:#2a2830!important}
+  .prt-hd{display:block!important;text-align:center;margin-bottom:4px;
+    font-size:14px;font-weight:700;color:#1a2744}
+  .prt-dt{display:block!important;text-align:center;font-size:11px;color:#666;margin-bottom:10px}
+}
+.prt-hd,.prt-dt{display:none}
 </style>
 </head>
 <body>
 
 <!-- APP BAR -->
 <header class="bar">
-  <h1>&#x1F9EE; บัญชีต้นทุนผลิต</h1>
-  <button class="bar-btn" id="btnClear">ล้างทั้งหมด</button>
+  <h1>บัญชีต้นทุนผลิต</h1>
+  <div class="bar-r">
+    <button class="bar-btn theme-btn" id="btnTheme" aria-label="สลับธีม">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="5.5"/>
+        <path d="M8 2.5A5.5 5.5 0 008 13.5z" fill="currentColor" stroke="none"/>
+      </svg>
+    </button>
+    <button class="bar-btn" id="btnClear">ล้างทั้งหมด</button>
+  </div>
 </header>
 
 <!-- NAVIGATION -->
@@ -210,16 +358,89 @@ main{padding:8px 16px 68px;max-width:980px;margin:0 auto}
 
 <!-- CONTENT -->
 <main>
-<p class="hint">กรอกตัวเลขที่โจทย์ให้ — ค่าจะไหลไปบัญชีที่เชื่อมอัตโนมัติ · กด &#x1F9EE; เพื่อเปิดเครื่องคิดเลข</p>
+<p class="hint">กรอกตัวเลขที่โจทย์ให้ — ค่าจะไหลไปบัญชีที่เชื่อมอัตโนมัติ</p>
 <div class="legend">
-  <div class="leg"><div class="sw" style="background:var(--in-bg);border:1px solid var(--card-b)"></div>กรอกเอง</div>
-  <div class="leg"><div class="sw" style="background:var(--au-bg);border:1px dashed var(--au-b)"></div>อัตโนมัติ</div>
+  <div class="leg"><div class="lsw" style="background:var(--in-bg);border:1px solid var(--in-b)"></div>กรอกเอง</div>
+  <div class="leg"><div class="lsw" style="background:var(--au-bg);border:1px dashed var(--au-b)"></div>อัตโนมัติ</div>
 </div>
+<div class="toolbar">
+  <button class="tb-btn" id="btnSave">บันทึก</button>
+  <button class="tb-btn" id="btnLoad">เรียกดู</button>
+  <button class="tb-btn" id="btnCsv">CSV</button>
+  <button class="tb-btn" id="btnPrint">พิมพ์</button>
+  <button class="tb-btn" id="btnTerm">คำศัพท์</button>
+</div>
+<div class="prt-hd" id="prtHd"></div>
+<div class="prt-dt" id="prtDt"></div>
 <div class="grid" id="grid"></div>
 </main>
 
+<!-- SAVE DIALOG -->
+<div class="sdlg" id="saveDlg">
+  <div class="sdlg-box">
+    <div class="sdlg-t">บันทึกรายการ</div>
+    <label for="saveName">ชื่อรายการ</label>
+    <input type="text" id="saveName" placeholder="เช่น ข้อ 1 บทที่ 3">
+    <div class="sdlg-act">
+      <button class="sec" id="saveDlgCancel">ยกเลิก</button>
+      <button class="pri" id="saveDlgOk">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOAD DRAWER -->
+<div class="dw-ov" id="loadOv">
+  <div class="dw">
+    <div class="dw-hd">
+      <h2>รายการที่บันทึก</h2>
+      <button class="dw-x" id="loadClose">&#10005;</button>
+    </div>
+    <div class="dw-body" id="loadList"></div>
+  </div>
+</div>
+
+<!-- TERMINOLOGY DRAWER -->
+<div class="dw-ov" id="termOv">
+  <div class="dw">
+    <div class="dw-hd">
+      <h2>คำศัพท์ต้นทุน</h2>
+      <button class="dw-x" id="termClose">&#10005;</button>
+    </div>
+    <div class="dw-body">
+      <table class="term-tbl">
+        <thead><tr><th>ตัวย่อ</th><th>ภาษาไทย</th><th>English</th></tr></thead>
+        <tbody>
+          <tr><td class="abbr">DM</td><td>วัตถุทางตรง</td><td class="en">Direct Materials</td></tr>
+          <tr><td class="abbr">IDM</td><td>วัตถุทางอ้อม</td><td class="en">Indirect Materials</td></tr>
+          <tr><td class="abbr">DL</td><td>ค่าแรงทางตรง</td><td class="en">Direct Labor</td></tr>
+          <tr><td class="abbr">IDL</td><td>ค่าแรงทางอ้อม</td><td class="en">Indirect Labor</td></tr>
+          <tr><td class="abbr">MOH</td><td>ค่าใช้จ่ายการผลิต</td><td class="en">Manufacturing Overhead</td></tr>
+          <tr><td class="abbr">FOH</td><td>ค่าใช้จ่ายโรงงาน</td><td class="en">Factory Overhead</td></tr>
+          <tr><td class="abbr">RM</td><td>วัตถุดิบ</td><td class="en">Raw Materials</td></tr>
+          <tr><td class="abbr">WIP</td><td>งานระหว่างทำ</td><td class="en">Work in Process</td></tr>
+          <tr><td class="abbr">FG</td><td>สินค้าสำเร็จรูป</td><td class="en">Finished Goods</td></tr>
+          <tr><td class="abbr">COGS</td><td>ต้นทุนสินค้าขาย</td><td class="en">Cost of Goods Sold</td></tr>
+          <tr><td class="abbr">COGM</td><td>ต้นทุนสินค้าที่ผลิต</td><td class="en">Cost of Goods Manufactured</td></tr>
+          <tr><td class="abbr">AP</td><td>เจ้าหนี้การค้า</td><td class="en">Accounts Payable</td></tr>
+          <tr><td class="abbr">AppMo</td><td>ค่าใช้จ่ายผลิตคิดเข้างาน</td><td class="en">Applied Mfg. Overhead</td></tr>
+          <tr><td class="abbr">OH Var</td><td>ผลต่างค่าใช้จ่ายผลิต</td><td class="en">Overhead Variance</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- FAB -->
-<button class="fab" id="fab" aria-label="เครื่องคิดเลข">&#x1F9EE;</button>
+<button class="fab" id="fab" aria-label="เครื่องคิดเลข">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">
+    <rect x="3" y="1" width="14" height="18" rx="2"/>
+    <rect x="5.5" y="3.5" width="9" height="3.5" rx="1"/>
+    <g fill="currentColor" stroke="none">
+      <circle cx="7" cy="11" r="1"/><circle cx="10" cy="11" r="1"/><circle cx="13" cy="11" r="1"/>
+      <circle cx="7" cy="14.5" r="1"/><circle cx="10" cy="14.5" r="1"/><circle cx="13" cy="14.5" r="1"/>
+    </g>
+  </svg>
+</button>
 
 <!-- CALCULATOR -->
 <div class="calc" id="calc">
@@ -263,6 +484,20 @@ main{padding:8px 16px 68px;max-width:980px;margin:0 auto}
 (function(){
 'use strict';
 
+/* ─── theme toggle ─── */
+var themeBtn=document.getElementById('btnTheme');
+function getThemePref(){try{return localStorage.getItem('cost-theme')||'';}catch(e){return '';}}
+function applyTheme(t){
+  if(t){document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('cost-theme',t);}catch(e){}}
+  else{document.documentElement.removeAttribute('data-theme');try{localStorage.removeItem('cost-theme');}catch(e){}}
+}
+var savedTheme=getThemePref();
+if(savedTheme) applyTheme(savedTheme);
+themeBtn.addEventListener('click',function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  applyTheme(cur==='dark'?'light':'dark');
+});
+
 /* ─── utilities ─── */
 var overrides = {};
 function parse(s){ return s ? (parseFloat(String(s).replace(/,/g,''))||0) : 0; }
@@ -291,7 +526,6 @@ function setTot(id,val){
 /* ─── page configurations ─── */
 var PAGES = {
 
-  /* ========== ระบบบัญชีต้นทุนจริง ========== */
   actual: {
     key: 'cost-actual',
     accounts: [
@@ -335,7 +569,6 @@ var PAGES = {
     }
   },
 
-  /* ========== ระบบต้นทุนปกติ (แผนกเดียว) ========== */
   normal: {
     key: 'cost-hw',
     accounts: [
@@ -392,7 +625,6 @@ var PAGES = {
     }
   },
 
-  /* ========== ระบบต้นทุนปกติ 2 แผนก ========== */
   normal2: {
     key: 'cost-normal2',
     accounts: [
@@ -585,6 +817,7 @@ function loadState(){
 document.getElementById('btnClear').addEventListener('click',function(){
   var page=PAGES[currentPage];
   overrides={};
+  loadedSaveName='';
   for(var i=0;i<inputs.length;i++){inputs[i].value='';inputs[i].classList.remove('override','flash');}
   if(page){
     for(var j=0;j<page.accounts.length;j++){
@@ -622,6 +855,7 @@ function switchTo(pageId){
   renderPage(pageId);
   loadState();
   recalculate();
+  attachHoverLinks();
 }
 
 function updateNav(st){
@@ -783,6 +1017,199 @@ document.addEventListener('keydown',function(e){
   else handled=false;
   if(handled){e.preventDefault();renderCalc();}
 });
+
+/* ─── saved entries ─── */
+var PAGE_LABELS={actual:'ต้นทุนจริง',normal:'ต้นทุนปกติ (แผนกเดียว)',normal2:'ต้นทุนปกติ (2 แผนก)'};
+var loadedSaveName='';
+
+function getSaves(){try{var s=localStorage.getItem('cost-saves');return s?JSON.parse(s):[];}catch(e){return[];}}
+function putSaves(a){try{localStorage.setItem('cost-saves',JSON.stringify(a));}catch(e){}}
+function escHtml(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+var saveDlgEl=document.getElementById('saveDlg');
+var saveNameEl=document.getElementById('saveName');
+
+document.getElementById('btnSave').addEventListener('click',function(){
+  saveNameEl.value=loadedSaveName||'';
+  saveDlgEl.classList.add('open');
+  setTimeout(function(){saveNameEl.focus();saveNameEl.select();},80);
+});
+document.getElementById('saveDlgCancel').addEventListener('click',function(){saveDlgEl.classList.remove('open');});
+saveDlgEl.addEventListener('click',function(e){if(e.target===saveDlgEl)saveDlgEl.classList.remove('open');});
+
+function doSave(){
+  var name=saveNameEl.value.trim();
+  if(!name)return;
+  var vals={};
+  for(var i=0;i<inputs.length;i++){if(inputs[i].value.trim())vals[inputs[i].id]=inputs[i].value;}
+  var entry={id:Date.now(),name:name,
+    date:new Date().toLocaleDateString('th-TH',{year:'numeric',month:'short',day:'numeric'}),
+    page:currentPage,values:vals,overrides:Object.keys(overrides)};
+  var saves=getSaves();saves.unshift(entry);putSaves(saves);
+  loadedSaveName=name;
+  document.getElementById('prtHd').textContent=name;
+  document.getElementById('prtDt').textContent=entry.date+' · '+(PAGE_LABELS[currentPage]||'');
+  saveDlgEl.classList.remove('open');
+}
+document.getElementById('saveDlgOk').addEventListener('click',doSave);
+saveNameEl.addEventListener('keydown',function(e){if(e.key==='Enter')doSave();});
+
+/* ─── load drawer ─── */
+var loadOvEl=document.getElementById('loadOv');
+var loadListEl=document.getElementById('loadList');
+
+document.getElementById('btnLoad').addEventListener('click',function(){renderSaveList();loadOvEl.classList.add('open');});
+document.getElementById('loadClose').addEventListener('click',function(){loadOvEl.classList.remove('open');});
+loadOvEl.addEventListener('click',function(e){if(e.target===loadOvEl)loadOvEl.classList.remove('open');});
+
+function renderSaveList(){
+  var saves=getSaves();
+  if(!saves.length){loadListEl.innerHTML='<div class="no-sv">ยังไม่มีรายการที่บันทึก</div>';return;}
+  var h='<ul class="sv-list">';
+  for(var i=0;i<saves.length;i++){
+    var s=saves[i];
+    h+='<li class="sv-item" data-sid="'+s.id+'">';
+    h+='<div class="sv-nm">'+escHtml(s.name)+'</div>';
+    h+='<div class="sv-meta">'+(PAGE_LABELS[s.page]||s.page)+' · '+escHtml(s.date)+'</div>';
+    h+='<div class="sv-acts">';
+    h+='<button data-do="load">เปิด</button>';
+    h+='<button data-do="csv">CSV</button>';
+    h+='<button data-do="del" class="del">ลบ</button>';
+    h+='</div></li>';
+  }
+  h+='</ul>';
+  loadListEl.innerHTML=h;
+}
+
+loadListEl.addEventListener('click',function(e){
+  var btn=e.target.closest('button[data-do]');
+  if(!btn)return;
+  var item=btn.closest('.sv-item');
+  if(!item)return;
+  var sid=Number(item.dataset.sid);
+  var action=btn.dataset.do;
+  if(action==='load') doLoadSave(sid);
+  else if(action==='csv') doExportSaveCsv(sid);
+  else if(action==='del') doDeleteSave(sid);
+});
+
+function findSave(id){var saves=getSaves();for(var i=0;i<saves.length;i++){if(saves[i].id===id)return saves[i];}return null;}
+
+function doLoadSave(id){
+  var entry=findSave(id);if(!entry)return;
+  var st=getNavState();
+  if(entry.page==='actual'){st.nav='actual';}
+  else{st.nav='normal';st.sub=entry.page;}
+  var needRerender=(currentPage!==entry.page);
+  updateNav(st);
+  if(!needRerender){
+    overrides={};
+    for(var j=0;j<inputs.length;j++){inputs[j].value='';inputs[j].classList.remove('override','flash');}
+  }
+  if(entry.overrides){for(var k=0;k<entry.overrides.length;k++)overrides[entry.overrides[k]]=1;}
+  for(var fid in entry.values){
+    if(fid==='_ov')continue;
+    var el=document.getElementById(fid);
+    if(el){el.value=entry.values[fid];if(overrides[fid])el.classList.add('override');}
+  }
+  recalculate();
+  loadedSaveName=entry.name;
+  document.getElementById('prtHd').textContent=entry.name;
+  document.getElementById('prtDt').textContent=entry.date+' · '+(PAGE_LABELS[entry.page]||'');
+  loadOvEl.classList.remove('open');
+}
+
+function doDeleteSave(id){
+  var saves=getSaves();putSaves(saves.filter(function(s){return s.id!==id;}));
+  renderSaveList();
+}
+
+/* ─── CSV export ─── */
+function csvCell(s){s=String(s);return(s.indexOf(',')>=0||s.indexOf('"')>=0||s.indexOf('\n')>=0)?'"'+s.replace(/"/g,'""')+'"':s;}
+function downloadFile(name,content,mime){
+  var blob=new Blob([content],{type:mime});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=name;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function buildCsv(page,valGetter){
+  var bom='﻿';
+  var csv=bom+'บัญชี,ด้าน,รายการ,จำนวน\r\n';
+  for(var a=0;a<page.accounts.length;a++){
+    var acct=page.accounts[a];
+    var name=acct.name.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+    for(var d=0;d<acct.dr.length;d++){var v=valGetter(acct.dr[d].id);if(v)csv+=csvCell(name)+',เดบิต,'+csvCell(acct.dr[d].lbl)+','+csvCell(v)+'\r\n';}
+    for(var c=0;c<acct.cr.length;c++){var v2=valGetter(acct.cr[c].id);if(v2)csv+=csvCell(name)+',เครดิต,'+csvCell(acct.cr[c].lbl)+','+csvCell(v2)+'\r\n';}
+  }
+  return csv;
+}
+
+function doExportSaveCsv(id){
+  var entry=findSave(id);if(!entry)return;
+  var page=PAGES[entry.page];if(!page)return;
+  var csv=buildCsv(page,function(fid){return entry.values[fid]||'';});
+  downloadFile(entry.name+'.csv',csv,'text/csv;charset=utf-8');
+}
+
+document.getElementById('btnCsv').addEventListener('click',function(){
+  var page=PAGES[currentPage];if(!page)return;
+  var csv=buildCsv(page,function(fid){var v=getVal(fid);return v?fmt(v):'';});
+  downloadFile((loadedSaveName||'t-account')+'.csv',csv,'text/csv;charset=utf-8');
+});
+
+/* ─── print / PDF ─── */
+document.getElementById('btnPrint').addEventListener('click',function(){
+  var h=document.getElementById('prtHd'),d=document.getElementById('prtDt');
+  if(!h.textContent){
+    h.textContent=loadedSaveName||(PAGE_LABELS[currentPage]||'');
+    d.textContent=new Date().toLocaleDateString('th-TH',{year:'numeric',month:'short',day:'numeric'});
+  }
+  window.print();
+});
+
+/* ─── terminology drawer ─── */
+var termOvEl=document.getElementById('termOv');
+document.getElementById('btnTerm').addEventListener('click',function(){termOvEl.classList.add('open');});
+document.getElementById('termClose').addEventListener('click',function(){termOvEl.classList.remove('open');});
+termOvEl.addEventListener('click',function(e){if(e.target===termOvEl)termOvEl.classList.remove('open');});
+
+/* ─── hover-linked highlighting ─── */
+var linkMap={};
+
+function buildLinkMap(){
+  linkMap={};
+  var page=PAGES[currentPage];
+  if(!page||!page.flows)return;
+  for(var src in page.flows){
+    var targets=page.flows[src];
+    if(!linkMap[src])linkMap[src]=[];
+    for(var i=0;i<targets.length;i++){
+      linkMap[src].push(targets[i]);
+      if(!linkMap[targets[i]])linkMap[targets[i]]=[];
+      linkMap[targets[i]].push(src);
+    }
+  }
+}
+
+function clearHL(){var els=document.querySelectorAll('.hl');for(var i=0;i<els.length;i++)els[i].classList.remove('hl');}
+
+function attachHoverLinks(){
+  buildLinkMap();
+  for(var k=0;k<inputs.length;k++){
+    (function(el){
+      el.addEventListener('mouseenter',function(){
+        clearHL();
+        var linked=linkMap[el.id];
+        if(!linked||!linked.length)return;
+        el.classList.add('hl');
+        for(var j=0;j<linked.length;j++){var t=document.getElementById(linked[j]);if(t)t.classList.add('hl');}
+      });
+      el.addEventListener('mouseleave',clearHL);
+    })(inputs[k]);
+  }
+}
 
 /* ─── init ─── */
 updateNav(getNavState());
