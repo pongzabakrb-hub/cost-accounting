@@ -36,18 +36,23 @@
   --fab-sh: rgba(0,0,0,.22);
   --calc-num: #EDEAE4;
   --calc-fn: transparent;
+  --nav-bg: #E8E4DC;
+  --nav-act: #1E3A5F;
+  --sub-act: #2E6B9E;
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#181B21;--card:#22262E;--card-b:#363B46;--hdr:#1B3354;--hdr-t:#D0D8E6;
   --dr:#6BAFE0;--cr:#E8707C;--in-bg:#2C291E;--au-bg:#1C2B1C;--au-b:#4A8A4A;
   --txt:#D4D4D4;--txt2:#828A9A;--lbl:#A8B0BC;--line:#6E7888;--flash:#284428;
   --div:#363B46;--neg:#E8707C;--fab-sh:rgba(0,0,0,.45);--calc-num:#2E323A;--calc-fn:transparent;
+  --nav-bg:#2A2E36;--nav-act:#3A6BA8;--sub-act:#6BAFE0;
 }}
 :root[data-theme="dark"]{
   --bg:#181B21;--card:#22262E;--card-b:#363B46;--hdr:#1B3354;--hdr-t:#D0D8E6;
   --dr:#6BAFE0;--cr:#E8707C;--in-bg:#2C291E;--au-bg:#1C2B1C;--au-b:#4A8A4A;
   --txt:#D4D4D4;--txt2:#828A9A;--lbl:#A8B0BC;--line:#6E7888;--flash:#284428;
   --div:#363B46;--neg:#E8707C;--fab-sh:rgba(0,0,0,.45);--calc-num:#2E323A;--calc-fn:transparent;
+  --nav-bg:#2A2E36;--nav-act:#3A6BA8;--sub-act:#6BAFE0;
 }
 
 /* ─── base ─── */
@@ -67,8 +72,23 @@ body{font-family:'Sarabun',system-ui,sans-serif;background:var(--bg);color:var(-
   font-weight:600;cursor:pointer;transition:background .15s}
 .bar-btn:hover{background:rgba(255,255,255,.1)}
 
+/* ─── navigation ─── */
+.nav{display:flex;gap:4px;padding:8px 16px 6px;justify-content:center;flex-wrap:wrap}
+.nav-btn{padding:6px 18px;border:1px solid var(--card-b);border-radius:20px;
+  background:var(--card);color:var(--txt);font-family:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:var(--nav-bg)}
+.nav-btn.active{background:var(--nav-act);color:#fff;border-color:var(--nav-act)}
+
+.sub-nav{display:flex;gap:4px;padding:0 16px 8px;justify-content:center}
+.sub-btn{padding:4px 14px;border:1px solid var(--card-b);border-radius:14px;
+  background:transparent;color:var(--txt2);font-family:inherit;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.sub-btn:hover{border-color:var(--sub-act);color:var(--sub-act)}
+.sub-btn.active{background:var(--sub-act);color:#fff;border-color:var(--sub-act)}
+
 /* ─── content ─── */
-main{padding:12px 16px 68px;max-width:980px;margin:0 auto}
+main{padding:8px 16px 68px;max-width:980px;margin:0 auto}
 .hint{text-align:center;font-size:12.5px;color:var(--txt2);margin:0 0 10px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:11.5px;
   color:var(--txt2);margin-bottom:12px}
@@ -83,6 +103,7 @@ main{padding:12px 16px 68px;max-width:980px;margin:0 auto}
 .acct{background:var(--card);border:1px solid var(--card-b);border-radius:5px;overflow:hidden}
 .acct-n{background:var(--hdr);color:var(--hdr-t);padding:6px 10px;font-size:13px;
   font-weight:600;text-align:center;letter-spacing:.02em;line-height:1.35}
+.acct-n small{font-size:11px;font-weight:400;opacity:.85}
 .acct-b{display:grid;grid-template-columns:1fr 1fr}
 @media(max-width:460px){
   .acct-b{grid-template-columns:1fr}
@@ -165,6 +186,7 @@ main{padding:12px 16px 68px;max-width:980px;margin:0 auto}
   .row .lbl{font-size:11px}
   .acct-n{font-size:12px}
   .bar h1{font-size:15px}
+  .nav-btn{padding:5px 12px;font-size:12px}
 }
 </style>
 </head>
@@ -172,138 +194,32 @@ main{padding:12px 16px 68px;max-width:980px;margin:0 auto}
 
 <!-- APP BAR -->
 <header class="bar">
-  <h1>🧮 บัญชีต้นทุนผลิต</h1>
+  <h1>&#x1F9EE; บัญชีต้นทุนผลิต</h1>
   <button class="bar-btn" id="btnClear">ล้างทั้งหมด</button>
 </header>
 
+<!-- NAVIGATION -->
+<nav class="nav" id="mainNav">
+  <button class="nav-btn" data-nav="actual">ต้นทุนจริง</button>
+  <button class="nav-btn" data-nav="normal">ต้นทุนปกติ</button>
+</nav>
+<div class="sub-nav" id="subNav" hidden>
+  <button class="sub-btn" data-sub="normal">แผนกเดียว</button>
+  <button class="sub-btn" data-sub="normal2">2 แผนก</button>
+</div>
+
 <!-- CONTENT -->
 <main>
-<p class="hint">กรอกตัวเลขที่โจทย์ให้ — ค่าจะไหลไปบัญชีที่เชื่อมอัตโนมัติ · กด 🧮 เพื่อเปิดเครื่องคิดเลข</p>
+<p class="hint">กรอกตัวเลขที่โจทย์ให้ — ค่าจะไหลไปบัญชีที่เชื่อมอัตโนมัติ · กด &#x1F9EE; เพื่อเปิดเครื่องคิดเลข</p>
 <div class="legend">
   <div class="leg"><div class="sw" style="background:var(--in-bg);border:1px solid var(--card-b)"></div>กรอกเอง</div>
   <div class="leg"><div class="sw" style="background:var(--au-bg);border:1px dashed var(--au-b)"></div>อัตโนมัติ</div>
 </div>
-
-<div class="grid">
-
-  <!-- 1 คุมวัตถุ -->
-  <div class="acct"><div class="acct-n">คุมวัตถุ</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">ยอดยกมา</span><input id="mat_beg" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ซื้อวัตถุ</span><input id="mat_purchase" inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="mat_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="row"><span class="lbl">เบิกใช้วัตถุทางตรง</span><input id="mat_direct" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">เบิกใช้วัตถุทางอ้อม</span><input id="mat_indirect" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ยอดยกไป</span><input id="mat_end" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="mat_ct">—</span></div>
-    </div>
-  </div></div>
-
-  <!-- 2 คุมงานระหว่างทำ -->
-  <div class="acct"><div class="acct-n">คุมงานระหว่างทำ</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">ยอดยกมา</span><input id="wip_beg" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">วัตถุทางตรง</span><input id="wip_mat" data-auto inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ค่าแรงงานทางตรง</span><input id="wip_labor" data-auto inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ค่าใช้จ่ายผลิตคิดเข้างาน</span><input id="wip_applied" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="wip_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="row"><span class="lbl">ผลิตเสร็จ</span><input id="wip_finished" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ยอดยกไป</span><input id="wip_end" data-auto inputmode="decimal"></div>
-      <div class="spacer"></div><div class="spacer"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="wip_ct">—</span></div>
-    </div>
-  </div></div>
-
-  <!-- 3 คุมค่าแรงงาน -->
-  <div class="acct"><div class="acct-n">คุมค่าแรงงาน</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">ค่าแรงงาน</span><input id="labor_total" inputmode="decimal"></div>
-      <div class="spacer"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="labor_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="row"><span class="lbl">ค่าแรงงานทางตรง</span><input id="labor_direct" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ค่าแรงงานทางอ้อม</span><input id="labor_indirect" inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="labor_ct">—</span></div>
-    </div>
-  </div></div>
-
-  <!-- 4 คุมสินค้าสำเร็จรูป -->
-  <div class="acct"><div class="acct-n">คุมสินค้าสำเร็จรูป</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">ยอดยกมา</span><input id="fg_beg" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ผลิตเสร็จ</span><input id="fg_finished" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="fg_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="row"><span class="lbl">ต้นทุนขาย</span><input id="fg_cogs" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ยอดยกไป</span><input id="fg_end" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="fg_ct">—</span></div>
-    </div>
-  </div></div>
-
-  <!-- 5 ค่าใช้จ่ายการผลิตคิดเข้างาน -->
-  <div class="acct"><div class="acct-n">ค่าใช้จ่ายการผลิตคิดเข้างาน</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">โอนไปคุมค่าใช้จ่ายผลิต</span><input id="applied_transfer" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="applied_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="row"><span class="lbl">ค่าใช้จ่ายผลิตคิดเข้างาน</span><input id="applied_val" inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="applied_ct">—</span></div>
-    </div>
-  </div></div>
-
-  <!-- 6 ต้นทุนขาย -->
-  <div class="acct"><div class="acct-n">ต้นทุนขาย</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">ต้นทุนขาย</span><input id="cogs_val" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="cogs_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="spacer"></div>
-      <div class="tot" style="visibility:hidden"><span></span><span class="v" id="cogs_ct">—</span></div>
-    </div>
-  </div></div>
-
-  <!-- 7 คุมค่าใช้จ่ายการผลิต -->
-  <div class="acct"><div class="acct-n">คุมค่าใช้จ่ายการผลิต</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">วัตถุทางอ้อม</span><input id="moh_mat" data-auto inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ค่าแรงงานทางอ้อม</span><input id="moh_labor" data-auto inputmode="decimal"></div>
-      <div class="row"><span class="lbl">ค่าใช้จ่ายการผลิตอื่น</span><input id="moh_other" inputmode="decimal"></div>
-      <div class="row"><span class="lbl">คิดเข้างานสูงไป</span><input id="moh_over" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="moh_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="row"><span class="lbl">ค่าใช้จ่ายผลิตคิดเข้างาน</span><input id="moh_applied" data-auto inputmode="decimal"></div>
-      <div class="row"><span class="lbl">คิดเข้างานต่ำไป</span><input id="moh_under" data-auto inputmode="decimal"></div>
-      <div class="spacer"></div><div class="spacer"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="moh_ct">—</span></div>
-    </div>
-  </div></div>
-
-  <!-- 8 สูง(ต่ำ)ไป -->
-  <div class="acct"><div class="acct-n">ค่าใช้จ่ายผลิตคิดเข้างานสูง(ต่ำ)ไป</div><div class="acct-b">
-    <div class="side dr"><div class="sh">เดบิต</div>
-      <div class="row"><span class="lbl">คิดเข้างานต่ำไป</span><input id="var_under" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="var_dt">—</span></div>
-    </div>
-    <div class="side cr"><div class="sh">เครดิต</div>
-      <div class="row"><span class="lbl">คิดเข้างานสูงไป</span><input id="var_over" data-auto inputmode="decimal"></div>
-      <div class="tot"><span>รวม</span><span class="v" id="var_ct">—</span></div>
-    </div>
-  </div></div>
-
-</div>
+<div class="grid" id="grid"></div>
 </main>
 
 <!-- FAB -->
-<button class="fab" id="fab" aria-label="เครื่องคิดเลข">🧮</button>
+<button class="fab" id="fab" aria-label="เครื่องคิดเลข">&#x1F9EE;</button>
 
 <!-- CALCULATOR -->
 <div class="calc" id="calc">
@@ -347,6 +263,7 @@ main{padding:12px 16px 68px;max-width:980px;margin:0 auto}
 (function(){
 'use strict';
 
+/* ─── utilities ─── */
 var overrides = {};
 function parse(s){ return s ? (parseFloat(String(s).replace(/,/g,''))||0) : 0; }
 function fmt(n){ return n ? n.toLocaleString('en-US',{maximumFractionDigits:2,minimumFractionDigits:0}) : ''; }
@@ -371,50 +288,228 @@ function setTot(id,val){
   e.classList.toggle('neg',val<0);
 }
 
-var flows={
-  mat_direct:['wip_mat'],mat_indirect:['moh_mat'],
-  labor_direct:['wip_labor'],labor_indirect:['moh_labor'],
-  applied_val:['wip_applied','applied_transfer','moh_applied'],
-  wip_finished:['fg_finished'],fg_cogs:['cogs_val']
-};
-var accts={
-  mat:{dr:['mat_beg','mat_purchase'],cr:['mat_direct','mat_indirect','mat_end']},
-  wip:{dr:['wip_beg','wip_mat','wip_labor','wip_applied'],cr:['wip_finished','wip_end']},
-  labor:{dr:['labor_total'],cr:['labor_direct','labor_indirect']},
-  fg:{dr:['fg_beg','fg_finished'],cr:['fg_cogs','fg_end']},
-  applied:{dr:['applied_transfer'],cr:['applied_val']},
-  cogs:{dr:['cogs_val'],cr:[]},
-  moh:{dr:['moh_mat','moh_labor','moh_other','moh_over'],cr:['moh_applied','moh_under']},
-  'var':{dr:['var_under'],cr:['var_over']}
+/* ─── page configurations ─── */
+var PAGES = {
+
+  /* ========== ระบบบัญชีต้นทุนจริง ========== */
+  actual: {
+    key: 'cost-actual',
+    accounts: [
+      { name:'คุมวัตถุ', id:'mat',
+        dr:[{id:'mat_beg',lbl:'ยอดยกมา'},{id:'mat_purchase',lbl:'ซื้อ'}],
+        cr:[{id:'mat_direct',lbl:'เบิกใช้วัตถุทางตรง'},{id:'mat_indirect',lbl:'เบิกใช้วัตถุทางอ้อม'},{id:'mat_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'คุมงานระหว่างทำ', id:'wip',
+        dr:[{id:'wip_beg',lbl:'ยอดยกมา'},{id:'wip_mat',lbl:'วัตถุทางตรง',auto:1},{id:'wip_labor',lbl:'ค่าแรงงานตรง',auto:1},{id:'wip_moh',lbl:'ค่าใช้จ่ายการผลิต',auto:1}],
+        cr:[{id:'wip_finished',lbl:'ผลิตเสร็จ'},{id:'wip_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'คุมค่าแรง', id:'labor',
+        dr:[{id:'labor_total',lbl:'ค่าแรงทั้งสิ้น'}],
+        cr:[{id:'labor_direct',lbl:'ค่าแรงงานทางตรง'},{id:'labor_indirect',lbl:'ค่าแรงงานทางอ้อม'}]
+      },
+      { name:'คุมสินค้าสำเร็จรูป', id:'fg',
+        dr:[{id:'fg_beg',lbl:'ยอดยกมา'},{id:'fg_finished',lbl:'ผลิตเสร็จ',auto:1}],
+        cr:[{id:'fg_cogs',lbl:'ต้นทุนขาย'},{id:'fg_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'คุมค่าใช้จ่ายการผลิต', id:'moh',
+        dr:[{id:'moh_mat',lbl:'วัตถุทางอ้อม',auto:1},{id:'moh_labor',lbl:'ค่าแรงงานทางอ้อม',auto:1},{id:'moh_other',lbl:'ค่าใช้จ่ายผลิตอื่นๆ'}],
+        cr:[{id:'moh_transfer',lbl:'โอนไปคุมงานระหว่างทำ',auto:1}]
+      },
+      { name:'ต้นทุนขาย', id:'cogs',
+        dr:[{id:'cogs_val',lbl:'ต้นทุนขาย',auto:1}],
+        cr:[{id:'cogs_profit',lbl:'กำไรขาดทุน'}]
+      }
+    ],
+    flows: {
+      mat_direct:['wip_mat'], mat_indirect:['moh_mat'],
+      labor_direct:['wip_labor'], labor_indirect:['moh_labor'],
+      wip_finished:['fg_finished'], fg_cogs:['cogs_val']
+    },
+    balance: function(g){
+      var mohT=g('moh_mat')+g('moh_labor')+g('moh_other');
+      setAuto('moh_transfer',mohT);
+      setAuto('wip_moh',g('moh_transfer'));
+      setAuto('mat_end',g('mat_beg')+g('mat_purchase')-g('mat_direct')-g('mat_indirect'));
+      setAuto('wip_end',g('wip_beg')+g('wip_mat')+g('wip_labor')+g('wip_moh')-g('wip_finished'));
+      setAuto('fg_end',g('fg_beg')+g('fg_finished')-g('fg_cogs'));
+    }
+  },
+
+  /* ========== ระบบต้นทุนปกติ (แผนกเดียว) ========== */
+  normal: {
+    key: 'cost-hw',
+    accounts: [
+      { name:'คุมวัตถุ', id:'mat',
+        dr:[{id:'mat_beg',lbl:'ยอดยกมา'},{id:'mat_purchase',lbl:'ซื้อวัตถุ'}],
+        cr:[{id:'mat_direct',lbl:'เบิกใช้วัตถุทางตรง'},{id:'mat_indirect',lbl:'เบิกใช้วัตถุทางอ้อม'},{id:'mat_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'คุมงานระหว่างทำ', id:'wip',
+        dr:[{id:'wip_beg',lbl:'ยอดยกมา'},{id:'wip_mat',lbl:'วัตถุทางตรง',auto:1},{id:'wip_labor',lbl:'ค่าแรงงานทางตรง',auto:1},{id:'wip_applied',lbl:'ค่าใช้จ่ายผลิตคิดเข้างาน',auto:1}],
+        cr:[{id:'wip_finished',lbl:'ผลิตเสร็จ'},{id:'wip_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'คุมค่าแรงงาน', id:'labor',
+        dr:[{id:'labor_total',lbl:'ค่าแรงงาน'}],
+        cr:[{id:'labor_direct',lbl:'ค่าแรงงานทางตรง'},{id:'labor_indirect',lbl:'ค่าแรงงานทางอ้อม'}]
+      },
+      { name:'คุมสินค้าสำเร็จรูป', id:'fg',
+        dr:[{id:'fg_beg',lbl:'ยอดยกมา'},{id:'fg_finished',lbl:'ผลิตเสร็จ',auto:1}],
+        cr:[{id:'fg_cogs',lbl:'ต้นทุนขาย'},{id:'fg_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'ค่าใช้จ่ายการผลิตคิดเข้างาน', id:'applied',
+        dr:[{id:'applied_transfer',lbl:'โอนไปคุมค่าใช้จ่ายผลิต',auto:1}],
+        cr:[{id:'applied_val',lbl:'ค่าใช้จ่ายผลิตคิดเข้างาน'}]
+      },
+      { name:'ต้นทุนขาย', id:'cogs',
+        dr:[{id:'cogs_val',lbl:'ต้นทุนขาย',auto:1}],
+        cr:[]
+      },
+      { name:'คุมค่าใช้จ่ายการผลิต', id:'moh',
+        dr:[{id:'moh_mat',lbl:'วัตถุทางอ้อม',auto:1},{id:'moh_labor',lbl:'ค่าแรงงานทางอ้อม',auto:1},{id:'moh_other',lbl:'ค่าใช้จ่ายการผลิตอื่น'},{id:'moh_over',lbl:'คิดเข้างานสูงไป',auto:1}],
+        cr:[{id:'moh_applied',lbl:'ค่าใช้จ่ายผลิตคิดเข้างาน',auto:1},{id:'moh_under',lbl:'คิดเข้างานต่ำไป',auto:1}]
+      },
+      { name:'ค่าใช้จ่ายผลิตคิดเข้างานสูง(ต่ำ)ไป', id:'variance',
+        dr:[{id:'var_under',lbl:'คิดเข้างานต่ำไป',auto:1}],
+        cr:[{id:'var_over',lbl:'คิดเข้างานสูงไป',auto:1}]
+      }
+    ],
+    flows: {
+      mat_direct:['wip_mat'], mat_indirect:['moh_mat'],
+      labor_direct:['wip_labor'], labor_indirect:['moh_labor'],
+      applied_val:['wip_applied','applied_transfer','moh_applied'],
+      wip_finished:['fg_finished'], fg_cogs:['cogs_val']
+    },
+    balance: function(g){
+      setAuto('mat_end',g('mat_beg')+g('mat_purchase')-g('mat_direct')-g('mat_indirect'));
+      setAuto('wip_end',g('wip_beg')+g('wip_mat')+g('wip_labor')+g('wip_applied')-g('wip_finished'));
+      setAuto('fg_end',g('fg_beg')+g('fg_finished')-g('fg_cogs'));
+      var actual=g('moh_mat')+g('moh_labor')+g('moh_other');
+      var applied=g('moh_applied'), diff=applied-actual;
+      if(diff>0){setAuto('moh_over',diff);setAuto('moh_under',0);}
+      else if(diff<0){setAuto('moh_under',-diff);setAuto('moh_over',0);}
+      else{setAuto('moh_over',0);setAuto('moh_under',0);}
+      setAuto('var_under',g('moh_under'));
+      setAuto('var_over',g('moh_over'));
+    }
+  },
+
+  /* ========== ระบบต้นทุนปกติ 2 แผนก ========== */
+  normal2: {
+    key: 'cost-normal2',
+    accounts: [
+      { name:'คุมวัตถุ', id:'mat',
+        dr:[{id:'mat_beg',lbl:'ยอดยกมา'},{id:'mat_purchase',lbl:'ซื้อวัตถุ'}],
+        cr:[{id:'mat_dm1',lbl:'วัตถุตรง แผนก 1'},{id:'mat_dm2',lbl:'วัตถุตรง แผนก 2'},{id:'mat_idm1',lbl:'วัตถุอ้อม แผนก 1'},{id:'mat_idm2',lbl:'วัตถุอ้อม แผนก 2'},{id:'mat_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'คุมงานระหว่างทำ<br><small>แผนกผลิต 1</small>', id:'wip1',
+        dr:[{id:'wip1_beg',lbl:'ยอดยกมา'},{id:'wip1_dm',lbl:'DM',auto:1},{id:'wip1_dl',lbl:'DL',auto:1},{id:'wip1_appmo',lbl:'AppMo',auto:1}],
+        cr:[{id:'wip1_transfer',lbl:'โอนไปแผนก 2'},{id:'wip1_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'คุมค่าแรงงาน', id:'labor',
+        dr:[{id:'labor_total',lbl:'ค่าแรง'}],
+        cr:[{id:'labor_dl1',lbl:'DL แผนก 1'},{id:'labor_dl2',lbl:'DL แผนก 2'},{id:'labor_idl1',lbl:'IDL แผนก 1'},{id:'labor_idl2',lbl:'IDL แผนก 2'}]
+      },
+      { name:'คุมงานระหว่างทำ<br><small>แผนกผลิต 2</small>', id:'wip2',
+        dr:[{id:'wip2_beg',lbl:'ยอดยกมา'},{id:'wip2_from1',lbl:'โอนมา',auto:1},{id:'wip2_dm',lbl:'DM',auto:1},{id:'wip2_dl',lbl:'DL',auto:1},{id:'wip2_appmo',lbl:'AppMo',auto:1}],
+        cr:[{id:'wip2_finished',lbl:'ผลิตเสร็จ'},{id:'wip2_end',lbl:'ยอดยกไป',auto:1}]
+      },
+      { name:'ค่าใช้จ่ายผลิตคิดเข้างาน<br><small>แผนกผลิต 1</small>', id:'app1',
+        dr:[{id:'app1_transfer',lbl:'คุม Mo',auto:1}],
+        cr:[{id:'app1_val',lbl:'AppMo'}]
+      },
+      { name:'ค่าใช้จ่ายผลิตคิดเข้างาน<br><small>แผนกผลิต 2</small>', id:'app2',
+        dr:[{id:'app2_transfer',lbl:'คุม Mo',auto:1}],
+        cr:[{id:'app2_val',lbl:'AppMo'}]
+      },
+      { name:'คุมค่าใช้จ่ายผลิต<br><small>แผนกผลิต 1</small>', id:'moh1',
+        dr:[{id:'moh1_mat',lbl:'IDM',auto:1},{id:'moh1_labor',lbl:'IDL',auto:1},{id:'moh1_other',lbl:'Mo อื่นๆ'},{id:'moh1_over',lbl:'คิดเข้างานสูงไป',auto:1}],
+        cr:[{id:'moh1_applied',lbl:'AppMo',auto:1},{id:'moh1_under',lbl:'คิดเข้างานต่ำไป',auto:1}]
+      },
+      { name:'คุมค่าใช้จ่ายผลิต<br><small>แผนกผลิต 2</small>', id:'moh2',
+        dr:[{id:'moh2_mat',lbl:'IDM',auto:1},{id:'moh2_labor',lbl:'IDL',auto:1},{id:'moh2_other',lbl:'Mo อื่นๆ'},{id:'moh2_over',lbl:'คิดเข้างานสูงไป',auto:1}],
+        cr:[{id:'moh2_applied',lbl:'AppMo',auto:1},{id:'moh2_under',lbl:'คิดเข้างานต่ำไป',auto:1}]
+      },
+      { name:'สูง(ต่ำ)ไป<br><small>แผนกผลิต 1</small>', id:'var1',
+        dr:[{id:'var1_under',lbl:'คิดเข้างานต่ำไป',auto:1}],
+        cr:[{id:'var1_over',lbl:'คิดเข้างานสูงไป',auto:1}]
+      },
+      { name:'สูง(ต่ำ)ไป<br><small>แผนกผลิต 2</small>', id:'var2',
+        dr:[{id:'var2_under',lbl:'คิดเข้างานต่ำไป',auto:1}],
+        cr:[{id:'var2_over',lbl:'คิดเข้างานสูงไป',auto:1}]
+      },
+      { name:'คุมสินค้าสำเร็จรูป', id:'fg',
+        dr:[{id:'fg_beg',lbl:'ยอดยกมา'},{id:'fg_finished',lbl:'ผลิตเสร็จ',auto:1}],
+        cr:[{id:'fg_cogs',lbl:'ต้นทุนขาย'},{id:'fg_end',lbl:'ยอดยกไป',auto:1}]
+      }
+    ],
+    flows: {
+      mat_dm1:['wip1_dm'], mat_dm2:['wip2_dm'],
+      mat_idm1:['moh1_mat'], mat_idm2:['moh2_mat'],
+      labor_dl1:['wip1_dl'], labor_dl2:['wip2_dl'],
+      labor_idl1:['moh1_labor'], labor_idl2:['moh2_labor'],
+      app1_val:['wip1_appmo','app1_transfer','moh1_applied'],
+      app2_val:['wip2_appmo','app2_transfer','moh2_applied'],
+      wip1_transfer:['wip2_from1'],
+      wip2_finished:['fg_finished']
+    },
+    balance: function(g){
+      setAuto('mat_end',g('mat_beg')+g('mat_purchase')-g('mat_dm1')-g('mat_dm2')-g('mat_idm1')-g('mat_idm2'));
+      setAuto('wip1_end',g('wip1_beg')+g('wip1_dm')+g('wip1_dl')+g('wip1_appmo')-g('wip1_transfer'));
+      setAuto('wip2_end',g('wip2_beg')+g('wip2_from1')+g('wip2_dm')+g('wip2_dl')+g('wip2_appmo')-g('wip2_finished'));
+      setAuto('fg_end',g('fg_beg')+g('fg_finished')-g('fg_cogs'));
+      var a1=g('moh1_mat')+g('moh1_labor')+g('moh1_other'),ap1=g('moh1_applied'),d1=ap1-a1;
+      if(d1>0){setAuto('moh1_over',d1);setAuto('moh1_under',0);}
+      else if(d1<0){setAuto('moh1_under',-d1);setAuto('moh1_over',0);}
+      else{setAuto('moh1_over',0);setAuto('moh1_under',0);}
+      setAuto('var1_under',g('moh1_under'));setAuto('var1_over',g('moh1_over'));
+      var a2=g('moh2_mat')+g('moh2_labor')+g('moh2_other'),ap2=g('moh2_applied'),d2=ap2-a2;
+      if(d2>0){setAuto('moh2_over',d2);setAuto('moh2_under',0);}
+      else if(d2<0){setAuto('moh2_under',-d2);setAuto('moh2_over',0);}
+      else{setAuto('moh2_over',0);setAuto('moh2_under',0);}
+      setAuto('var2_under',g('moh2_under'));setAuto('var2_over',g('moh2_over'));
+    }
+  }
 };
 
-function recalculate(){
-  var src,i,val;
-  for(src in flows){val=getVal(src);for(i=0;i<flows[src].length;i++) setAuto(flows[src][i],val);}
-  setAuto('mat_end', getVal('mat_beg')+getVal('mat_purchase')-getVal('mat_direct')-getVal('mat_indirect'));
-  setAuto('wip_end', getVal('wip_beg')+getVal('wip_mat')+getVal('wip_labor')+getVal('wip_applied')-getVal('wip_finished'));
-  setAuto('fg_end',  getVal('fg_beg')+getVal('fg_finished')-getVal('fg_cogs'));
-  var actual=getVal('moh_mat')+getVal('moh_labor')+getVal('moh_other');
-  var applied=getVal('moh_applied'), diff=applied-actual;
-  if(diff>0){setAuto('moh_over',diff);setAuto('moh_under',0);}
-  else if(diff<0){setAuto('moh_under',-diff);setAuto('moh_over',0);}
-  else{setAuto('moh_over',0);setAuto('moh_under',0);}
-  setAuto('var_under',getVal('moh_under'));
-  setAuto('var_over',getVal('moh_over'));
-  var k,a,dt,ct,j;
-  for(k in accts){
-    a=accts[k]; dt=0; ct=0;
-    for(j=0;j<a.dr.length;j++) dt+=getVal(a.dr[j]);
-    for(j=0;j<a.cr.length;j++) ct+=getVal(a.cr[j]);
-    setTot(k+'_dt',dt);
-    if(a.cr.length) setTot(k+'_ct',ct);
+/* ─── state ─── */
+var currentPage = null;
+var inputs = [];
+var lastInput = null, lastLabel = '';
+
+/* ─── rendering ─── */
+function buildSide(type, rows, acctId){
+  var isdr = (type==='dr');
+  var h='<div class="side '+type+'"><div class="sh">'+(isdr?'เดบิต':'เครดิต')+'</div>';
+  for(var i=0;i<rows.length;i++){
+    h+='<div class="row"><span class="lbl">'+rows[i].lbl+'</span>';
+    h+='<input id="'+rows[i].id+'" inputmode="decimal"';
+    if(rows[i].auto) h+=' data-auto';
+    h+='></div>';
   }
-  saveState();
+  if(!rows.length) h+='<div class="spacer"></div>';
+  var vis=rows.length?'':' style="visibility:hidden"';
+  h+='<div class="tot"'+vis+'><span>รวม</span><span class="v" id="'+acctId+'_'+(isdr?'d':'c')+'t">—</span></div>';
+  h+='</div>';
+  return h;
 }
 
-var inputs=document.querySelectorAll('.row input');
-var lastInput=null, lastLabel='';
+function renderPage(pageId){
+  var page=PAGES[pageId];
+  if(!page) return;
+  var grid=document.getElementById('grid');
+  var h='';
+  for(var i=0;i<page.accounts.length;i++){
+    var a=page.accounts[i];
+    h+='<div class="acct"><div class="acct-n">'+a.name+'</div><div class="acct-b">';
+    h+=buildSide('dr',a.dr,a.id);
+    h+=buildSide('cr',a.cr,a.id);
+    h+='</div></div>';
+  }
+  grid.innerHTML=h;
+  inputs=grid.querySelectorAll('input');
+  for(var k=0;k<inputs.length;k++) wireInput(inputs[k]);
+}
 
+/* ─── input wiring ─── */
 function wireInput(el){
   var isAuto=el.hasAttribute('data-auto');
   el.addEventListener('focus',function(){
@@ -422,7 +517,7 @@ function wireInput(el){
     el.value=v?String(v):'';
     el.select();
     lastInput=el;
-    var row=el.closest('.row'), lb=row?row.querySelector('.lbl'):null;
+    var row=el.closest('.row'),lb=row?row.querySelector('.lbl'):null;
     lastLabel=lb?lb.textContent.trim():el.id;
     updateInsBtn();
   });
@@ -438,26 +533,43 @@ function wireInput(el){
     } else { el.value=v?fmt(v):''; }
   });
 }
-for(var k=0;k<inputs.length;k++) wireInput(inputs[k]);
 
-document.getElementById('btnClear').addEventListener('click',function(){
-  overrides={};
-  for(var i=0;i<inputs.length;i++){inputs[i].value='';inputs[i].classList.remove('override','flash');}
-  var k; for(k in accts){setTot(k+'_dt',0);if(accts[k].cr.length)setTot(k+'_ct',0);}
-  try{localStorage.removeItem('cost-hw');}catch(e){}
-});
+/* ─── recalculate ─── */
+function recalculate(){
+  var page=PAGES[currentPage];
+  if(!page) return;
+  var src,i;
+  for(src in page.flows){
+    var val=getVal(src);
+    for(i=0;i<page.flows[src].length;i++) setAuto(page.flows[src][i],val);
+  }
+  if(page.balance) page.balance(getVal);
+  for(i=0;i<page.accounts.length;i++){
+    var a=page.accounts[i],dt=0,ct=0,j;
+    for(j=0;j<a.dr.length;j++) dt+=getVal(a.dr[j].id);
+    for(j=0;j<a.cr.length;j++) ct+=getVal(a.cr[j].id);
+    setTot(a.id+'_dt',dt);
+    if(a.cr.length) setTot(a.id+'_ct',ct);
+  }
+  saveState();
+}
 
+/* ─── save / load ─── */
 function saveState(){
+  var page=PAGES[currentPage];
+  if(!page) return;
   try{
     var d={},el;
     for(var i=0;i<inputs.length;i++){el=inputs[i];if(el.value.trim())d[el.id]=el.value;}
     d._ov=Object.keys(overrides);
-    localStorage.setItem('cost-hw',JSON.stringify(d));
+    localStorage.setItem(page.key,JSON.stringify(d));
   }catch(e){}
 }
 function loadState(){
+  var page=PAGES[currentPage];
+  if(!page) return;
   try{
-    var raw=localStorage.getItem('cost-hw');if(!raw)return;
+    var raw=localStorage.getItem(page.key);if(!raw)return;
     var d=JSON.parse(raw);if(!d)return;
     if(d._ov){for(var i=0;i<d._ov.length;i++)overrides[d._ov[i]]=1;}
     var id,el;
@@ -466,12 +578,90 @@ function loadState(){
       el=document.getElementById(id);
       if(el){el.value=d[id];if(overrides[id])el.classList.add('override');}
     }
-    recalculate();
   }catch(e){}
 }
-loadState();
 
-/* CALCULATOR */
+/* ─── clear ─── */
+document.getElementById('btnClear').addEventListener('click',function(){
+  var page=PAGES[currentPage];
+  overrides={};
+  for(var i=0;i<inputs.length;i++){inputs[i].value='';inputs[i].classList.remove('override','flash');}
+  if(page){
+    for(var j=0;j<page.accounts.length;j++){
+      var a=page.accounts[j];
+      setTot(a.id+'_dt',0);
+      if(a.cr.length) setTot(a.id+'_ct',0);
+    }
+    try{localStorage.removeItem(page.key);}catch(e){}
+  }
+});
+
+/* ─── navigation ─── */
+var navBtns=document.querySelectorAll('.nav-btn');
+var subBtns=document.querySelectorAll('.sub-btn');
+var subNav=document.getElementById('subNav');
+
+function getNavState(){
+  try{
+    var s=localStorage.getItem('cost-nav');
+    return s?JSON.parse(s):{nav:'normal',sub:'normal'};
+  }catch(e){return {nav:'normal',sub:'normal'};}
+}
+function saveNavState(st){
+  try{localStorage.setItem('cost-nav',JSON.stringify(st));}catch(e){}
+}
+
+function switchTo(pageId){
+  if(currentPage===pageId) return;
+  if(currentPage) saveState();
+  currentPage=pageId;
+  overrides={};
+  lastInput=null;lastLabel='';
+  updateInsBtn();
+  if(calcOpen) toggleCalc();
+  renderPage(pageId);
+  loadState();
+  recalculate();
+}
+
+function updateNav(st){
+  for(var i=0;i<navBtns.length;i++){
+    navBtns[i].classList.toggle('active',navBtns[i].dataset.nav===st.nav);
+  }
+  if(st.nav==='normal'){
+    subNav.hidden=false;
+    for(var j=0;j<subBtns.length;j++){
+      subBtns[j].classList.toggle('active',subBtns[j].dataset.sub===st.sub);
+    }
+    switchTo(st.sub);
+  } else {
+    subNav.hidden=true;
+    switchTo(st.nav);
+  }
+  saveNavState(st);
+}
+
+for(var ni=0;ni<navBtns.length;ni++){
+  (function(btn){
+    btn.addEventListener('click',function(){
+      var st=getNavState();
+      st.nav=btn.dataset.nav;
+      if(st.nav==='normal'&&!st.sub) st.sub='normal';
+      updateNav(st);
+    });
+  })(navBtns[ni]);
+}
+for(var si=0;si<subBtns.length;si++){
+  (function(btn){
+    btn.addEventListener('click',function(){
+      var st=getNavState();
+      st.sub=btn.dataset.sub;
+      updateNav(st);
+    });
+  })(subBtns[si]);
+}
+
+/* ─── calculator ─── */
 var C={
   val:'0', expr:'', prev:null, op:null, fresh:true,
   digit:function(d){
@@ -527,7 +717,7 @@ function renderCalc(){
 }
 
 var cks=document.querySelectorAll('.ck');
-for(var i=0;i<cks.length;i++){
+for(var ci=0;ci<cks.length;ci++){
   (function(btn){
     btn.addEventListener('click',function(){
       var k=btn.dataset.k;
@@ -540,7 +730,7 @@ for(var i=0;i<cks.length;i++){
       else if(k==='%') C.pct();
       renderCalc();
     });
-  })(cks[i]);
+  })(cks[ci]);
 }
 
 var calcEl=document.getElementById('calc');
@@ -593,6 +783,9 @@ document.addEventListener('keydown',function(e){
   else handled=false;
   if(handled){e.preventDefault();renderCalc();}
 });
+
+/* ─── init ─── */
+updateNav(getNavState());
 
 })();
 </script>
