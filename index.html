@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1E3A5F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ต้นทุนผลิต">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>บัญชีต้นทุนผลิต</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap">
+
+<style>
+/* ─── tokens ─── */
+:root {
+  --bg: #F4F1EC;
+  --card: #FFFFFF;
+  --card-b: #D4CFC7;
+  --hdr: #1E3A5F;
+  --hdr-t: #F0F4F8;
+  --dr: #2E6B9E;
+  --cr: #A83240;
+  --in-bg: #FFFCF0;
+  --au-bg: #ECF4EC;
+  --au-b: #8CB88C;
+  --txt: #2C2C2C;
+  --txt2: #7A7A72;
+  --lbl: #3A3A36;
+  --line: #2C2C2C;
+  --flash: #C8E6C8;
+  --div: #E8E4DC;
+  --neg: #A83240;
+  --fab-sh: rgba(0,0,0,.22);
+  --calc-num: #EDEAE4;
+  --calc-fn: transparent;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#181B21;--card:#22262E;--card-b:#363B46;--hdr:#1B3354;--hdr-t:#D0D8E6;
+  --dr:#6BAFE0;--cr:#E8707C;--in-bg:#2C291E;--au-bg:#1C2B1C;--au-b:#4A8A4A;
+  --txt:#D4D4D4;--txt2:#828A9A;--lbl:#A8B0BC;--line:#6E7888;--flash:#284428;
+  --div:#363B46;--neg:#E8707C;--fab-sh:rgba(0,0,0,.45);--calc-num:#2E323A;--calc-fn:transparent;
+}}
+:root[data-theme="dark"]{
+  --bg:#181B21;--card:#22262E;--card-b:#363B46;--hdr:#1B3354;--hdr-t:#D0D8E6;
+  --dr:#6BAFE0;--cr:#E8707C;--in-bg:#2C291E;--au-bg:#1C2B1C;--au-b:#4A8A4A;
+  --txt:#D4D4D4;--txt2:#828A9A;--lbl:#A8B0BC;--line:#6E7888;--flash:#284428;
+  --div:#363B46;--neg:#E8707C;--fab-sh:rgba(0,0,0,.45);--calc-num:#2E323A;--calc-fn:transparent;
+}
+
+/* ─── base ─── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Sarabun',system-ui,sans-serif;background:var(--bg);color:var(--txt);
+  line-height:1.5;font-variant-numeric:tabular-nums;
+  -webkit-tap-highlight-color:transparent}
+
+/* ─── app bar ─── */
+.bar{position:sticky;top:0;z-index:50;background:var(--hdr);color:var(--hdr-t);
+  padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.bar h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.01em;white-space:nowrap}
+.bar-btn{padding:5px 14px;border:1px solid rgba(255,255,255,.25);border-radius:4px;
+  background:transparent;color:var(--hdr-t);font-family:inherit;font-size:12px;
+  font-weight:600;cursor:pointer;transition:background .15s}
+.bar-btn:hover{background:rgba(255,255,255,.1)}
+
+/* ─── content ─── */
+main{padding:12px 16px 68px;max-width:980px;margin:0 auto}
+.hint{text-align:center;font-size:12.5px;color:var(--txt2);margin:0 0 10px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:11.5px;
+  color:var(--txt2);margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:5px}
+.sw{width:20px;height:14px;border-radius:3px;flex-shrink:0}
+
+/* ─── grid ─── */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media(max-width:700px){.grid{grid-template-columns:1fr;gap:10px}}
+
+/* ─── T-account card ─── */
+.acct{background:var(--card);border:1px solid var(--card-b);border-radius:5px;overflow:hidden}
+.acct-n{background:var(--hdr);color:var(--hdr-t);padding:6px 10px;font-size:13px;
+  font-weight:600;text-align:center;letter-spacing:.02em;line-height:1.35}
+.acct-b{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:460px){
+  .acct-b{grid-template-columns:1fr}
+  .side.dr{border-right:none!important;border-bottom:2px solid var(--hdr)}
+}
+.side{padding:6px 8px 8px;display:flex;flex-direction:column;gap:3px}
+.side.dr{border-right:2px solid var(--hdr)}
+.sh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.side.dr .sh{color:var(--dr)} .side.cr .sh{color:var(--cr)}
+
+.row{display:flex;align-items:center;gap:4px;font-size:12px}
+.row .lbl{flex:1;min-width:0;color:var(--lbl);line-height:1.3}
+.row input{width:70px;flex-shrink:0;text-align:right;padding:3px 5px;
+  border:1px solid var(--card-b);border-radius:3px;background:var(--in-bg);color:var(--txt);
+  font-family:inherit;font-size:12.5px;font-variant-numeric:tabular-nums;outline:none;
+  transition:border-color .15s,box-shadow .15s}
+.row input:focus{border-color:var(--dr);box-shadow:0 0 0 2px rgba(46,107,158,.12)}
+.row input[data-auto]{background:var(--au-bg);border-style:dashed;border-color:var(--au-b)}
+.row input[data-auto].override{background:var(--in-bg);border-style:solid;border-color:var(--card-b)}
+.row input.flash{animation:pop .7s ease-out}
+@keyframes pop{0%,25%{background-color:var(--flash)}100%{background-color:var(--au-bg)}}
+
+.spacer{height:5px}
+.tot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;
+  padding-top:3px;border-top:1px solid var(--line);font-weight:700;font-size:12.5px}
+.tot .v{min-width:70px;text-align:right;padding:2px 5px 1px;border-bottom:3px double var(--line)}
+.tot .v.neg{color:var(--neg)}
+
+/* ─── FAB ─── */
+.fab{position:fixed;bottom:18px;right:18px;width:50px;height:50px;border-radius:50%;
+  background:var(--hdr);color:var(--hdr-t);border:none;font-size:22px;cursor:pointer;
+  box-shadow:0 3px 14px var(--fab-sh);z-index:90;display:flex;align-items:center;
+  justify-content:center;transition:transform .25s,opacity .2s}
+.fab:hover{transform:scale(1.06)}
+.fab:active{transform:scale(.95)}
+.fab.gone{transform:scale(0) rotate(90deg);opacity:0;pointer-events:none}
+
+/* ─── calculator panel ─── */
+.calc{position:fixed;bottom:76px;right:14px;width:272px;background:var(--card);
+  border:1px solid var(--card-b);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.18);
+  z-index:100;transform:scale(.92) translateY(16px);opacity:0;pointer-events:none;
+  visibility:hidden;transition:transform .22s ease,opacity .22s ease,visibility 0s .22s}
+.calc.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto;
+  visibility:visible;transition:transform .22s ease,opacity .22s ease,visibility 0s 0s}
+@media(max-width:460px){.calc{right:8px;left:8px;width:auto;bottom:72px}}
+
+.calc-hd{background:var(--hdr);color:var(--hdr-t);padding:7px 12px;display:flex;
+  align-items:center;justify-content:space-between;font-size:13px;font-weight:600;
+  border-radius:12px 12px 0 0}
+.calc-x{background:none;border:none;color:var(--hdr-t);font-size:18px;cursor:pointer;
+  padding:0 4px;opacity:.7;transition:opacity .15s}
+.calc-x:hover{opacity:1}
+
+.calc-scr{padding:10px 12px 6px;text-align:right;border-bottom:1px solid var(--div);
+  min-height:64px;display:flex;flex-direction:column;justify-content:flex-end}
+.calc-expr{font-size:12px;color:var(--txt2);min-height:16px;line-height:1.3;word-break:break-all}
+.calc-disp{font-size:28px;font-weight:700;color:var(--txt);line-height:1.15;
+  overflow-x:auto;white-space:nowrap}
+
+.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:6px 8px 4px}
+.ck{padding:12px 0;border:none;border-radius:6px;font-family:inherit;font-size:17px;
+  font-weight:600;cursor:pointer;background:var(--calc-num);color:var(--txt);
+  transition:background .1s,transform .08s;-webkit-user-select:none;user-select:none}
+.ck:active{transform:scale(.94)}
+.ck.op{background:var(--dr);color:#fff}
+.ck.eq{background:var(--hdr);color:var(--hdr-t)}
+.ck.fn{background:var(--calc-fn);color:var(--cr);font-weight:700}
+.ck.wide{grid-column:span 2}
+
+.calc-ins{display:block;width:calc(100% - 16px);margin:2px 8px 8px;padding:8px;
+  border:1px dashed var(--au-b);border-radius:6px;background:var(--au-bg);color:var(--txt);
+  font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-align:center;
+  transition:background .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calc-ins:hover:not(:disabled){background:var(--flash)}
+.calc-ins:disabled{opacity:.45;cursor:default}
+
+/* ─── responsive tweaks ─── */
+@media(max-width:460px){
+  .row input,.tot .v{width:60px;min-width:60px;font-size:11.5px}
+  .row .lbl{font-size:11px}
+  .acct-n{font-size:12px}
+  .bar h1{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<!-- APP BAR -->
+<header class="bar">
+  <h1>🧮 บัญชีต้นทุนผลิต</h1>
+  <button class="bar-btn" id="btnClear">ล้างทั้งหมด</button>
+</header>
+
+<!-- CONTENT -->
+<main>
+<p class="hint">กรอกตัวเลขที่โจทย์ให้ — ค่าจะไหลไปบัญชีที่เชื่อมอัตโนมัติ · กด 🧮 เพื่อเปิดเครื่องคิดเลข</p>
+<div class="legend">
+  <div class="leg"><div class="sw" style="background:var(--in-bg);border:1px solid var(--card-b)"></div>กรอกเอง</div>
+  <div class="leg"><div class="sw" style="background:var(--au-bg);border:1px dashed var(--au-b)"></div>อัตโนมัติ</div>
+</div>
+
+<div class="grid">
+
+  <!-- 1 คุมวัตถุ -->
+  <div class="acct"><div class="acct-n">คุมวัตถุ</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">ยอดยกมา</span><input id="mat_beg" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ซื้อวัตถุ</span><input id="mat_purchase" inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="mat_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="row"><span class="lbl">เบิกใช้วัตถุทางตรง</span><input id="mat_direct" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">เบิกใช้วัตถุทางอ้อม</span><input id="mat_indirect" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ยอดยกไป</span><input id="mat_end" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="mat_ct">—</span></div>
+    </div>
+  </div></div>
+
+  <!-- 2 คุมงานระหว่างทำ -->
+  <div class="acct"><div class="acct-n">คุมงานระหว่างทำ</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">ยอดยกมา</span><input id="wip_beg" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">วัตถุทางตรง</span><input id="wip_mat" data-auto inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ค่าแรงงานทางตรง</span><input id="wip_labor" data-auto inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ค่าใช้จ่ายผลิตคิดเข้างาน</span><input id="wip_applied" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="wip_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="row"><span class="lbl">ผลิตเสร็จ</span><input id="wip_finished" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ยอดยกไป</span><input id="wip_end" data-auto inputmode="decimal"></div>
+      <div class="spacer"></div><div class="spacer"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="wip_ct">—</span></div>
+    </div>
+  </div></div>
+
+  <!-- 3 คุมค่าแรงงาน -->
+  <div class="acct"><div class="acct-n">คุมค่าแรงงาน</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">ค่าแรงงาน</span><input id="labor_total" inputmode="decimal"></div>
+      <div class="spacer"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="labor_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="row"><span class="lbl">ค่าแรงงานทางตรง</span><input id="labor_direct" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ค่าแรงงานทางอ้อม</span><input id="labor_indirect" inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="labor_ct">—</span></div>
+    </div>
+  </div></div>
+
+  <!-- 4 คุมสินค้าสำเร็จรูป -->
+  <div class="acct"><div class="acct-n">คุมสินค้าสำเร็จรูป</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">ยอดยกมา</span><input id="fg_beg" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ผลิตเสร็จ</span><input id="fg_finished" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="fg_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="row"><span class="lbl">ต้นทุนขาย</span><input id="fg_cogs" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ยอดยกไป</span><input id="fg_end" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="fg_ct">—</span></div>
+    </div>
+  </div></div>
+
+  <!-- 5 ค่าใช้จ่ายการผลิตคิดเข้างาน -->
+  <div class="acct"><div class="acct-n">ค่าใช้จ่ายการผลิตคิดเข้างาน</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">โอนไปคุมค่าใช้จ่ายผลิต</span><input id="applied_transfer" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="applied_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="row"><span class="lbl">ค่าใช้จ่ายผลิตคิดเข้างาน</span><input id="applied_val" inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="applied_ct">—</span></div>
+    </div>
+  </div></div>
+
+  <!-- 6 ต้นทุนขาย -->
+  <div class="acct"><div class="acct-n">ต้นทุนขาย</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">ต้นทุนขาย</span><input id="cogs_val" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="cogs_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="spacer"></div>
+      <div class="tot" style="visibility:hidden"><span></span><span class="v" id="cogs_ct">—</span></div>
+    </div>
+  </div></div>
+
+  <!-- 7 คุมค่าใช้จ่ายการผลิต -->
+  <div class="acct"><div class="acct-n">คุมค่าใช้จ่ายการผลิต</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">วัตถุทางอ้อม</span><input id="moh_mat" data-auto inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ค่าแรงงานทางอ้อม</span><input id="moh_labor" data-auto inputmode="decimal"></div>
+      <div class="row"><span class="lbl">ค่าใช้จ่ายการผลิตอื่น</span><input id="moh_other" inputmode="decimal"></div>
+      <div class="row"><span class="lbl">คิดเข้างานสูงไป</span><input id="moh_over" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="moh_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="row"><span class="lbl">ค่าใช้จ่ายผลิตคิดเข้างาน</span><input id="moh_applied" data-auto inputmode="decimal"></div>
+      <div class="row"><span class="lbl">คิดเข้างานต่ำไป</span><input id="moh_under" data-auto inputmode="decimal"></div>
+      <div class="spacer"></div><div class="spacer"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="moh_ct">—</span></div>
+    </div>
+  </div></div>
+
+  <!-- 8 สูง(ต่ำ)ไป -->
+  <div class="acct"><div class="acct-n">ค่าใช้จ่ายผลิตคิดเข้างานสูง(ต่ำ)ไป</div><div class="acct-b">
+    <div class="side dr"><div class="sh">เดบิต</div>
+      <div class="row"><span class="lbl">คิดเข้างานต่ำไป</span><input id="var_under" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="var_dt">—</span></div>
+    </div>
+    <div class="side cr"><div class="sh">เครดิต</div>
+      <div class="row"><span class="lbl">คิดเข้างานสูงไป</span><input id="var_over" data-auto inputmode="decimal"></div>
+      <div class="tot"><span>รวม</span><span class="v" id="var_ct">—</span></div>
+    </div>
+  </div></div>
+
+</div>
+</main>
+
+<!-- FAB -->
+<button class="fab" id="fab" aria-label="เครื่องคิดเลข">🧮</button>
+
+<!-- CALCULATOR -->
+<div class="calc" id="calc">
+  <div class="calc-hd">
+    <span>เครื่องคิดเลข</span>
+    <button class="calc-x" id="calcX" aria-label="ปิด">&#10005;</button>
+  </div>
+  <div class="calc-scr">
+    <div class="calc-expr" id="cExpr"></div>
+    <div class="calc-disp" id="cDisp">0</div>
+  </div>
+  <div class="calc-keys">
+    <button class="ck fn" data-k="C">C</button>
+    <button class="ck fn" data-k="⌫">⌫</button>
+    <button class="ck fn" data-k="%">%</button>
+    <button class="ck op" data-k="÷">÷</button>
+
+    <button class="ck" data-k="7">7</button>
+    <button class="ck" data-k="8">8</button>
+    <button class="ck" data-k="9">9</button>
+    <button class="ck op" data-k="×">×</button>
+
+    <button class="ck" data-k="4">4</button>
+    <button class="ck" data-k="5">5</button>
+    <button class="ck" data-k="6">6</button>
+    <button class="ck op" data-k="−">−</button>
+
+    <button class="ck" data-k="1">1</button>
+    <button class="ck" data-k="2">2</button>
+    <button class="ck" data-k="3">3</button>
+    <button class="ck op" data-k="+">+</button>
+
+    <button class="ck wide" data-k="0">0</button>
+    <button class="ck" data-k=".">.</button>
+    <button class="ck eq" data-k="=">=</button>
+  </div>
+  <button class="calc-ins" id="calcIns" disabled>ใส่ค่า (เลือกช่องก่อน)</button>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var overrides = {};
+function parse(s){ return s ? (parseFloat(String(s).replace(/,/g,''))||0) : 0; }
+function fmt(n){ return n ? n.toLocaleString('en-US',{maximumFractionDigits:2,minimumFractionDigits:0}) : ''; }
+function fmtC(n){
+  if(n===null||n===undefined||isNaN(n)) return '';
+  return n.toLocaleString('en-US',{maximumFractionDigits:8});
+}
+function getVal(id){ var e=document.getElementById(id); return e?parse(e.value):0; }
+function setAuto(id,val){
+  if(overrides[id]) return;
+  var e=document.getElementById(id);
+  if(!e||document.activeElement===e) return;
+  var s=val?fmt(val):'';
+  if(e.value===s) return;
+  e.value=s;
+  if(s){e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash');}
+}
+function setTot(id,val){
+  var e=document.getElementById(id);
+  if(!e) return;
+  e.textContent=val?fmt(val):'—';
+  e.classList.toggle('neg',val<0);
+}
+
+var flows={
+  mat_direct:['wip_mat'],mat_indirect:['moh_mat'],
+  labor_direct:['wip_labor'],labor_indirect:['moh_labor'],
+  applied_val:['wip_applied','applied_transfer','moh_applied'],
+  wip_finished:['fg_finished'],fg_cogs:['cogs_val']
+};
+var accts={
+  mat:{dr:['mat_beg','mat_purchase'],cr:['mat_direct','mat_indirect','mat_end']},
+  wip:{dr:['wip_beg','wip_mat','wip_labor','wip_applied'],cr:['wip_finished','wip_end']},
+  labor:{dr:['labor_total'],cr:['labor_direct','labor_indirect']},
+  fg:{dr:['fg_beg','fg_finished'],cr:['fg_cogs','fg_end']},
+  applied:{dr:['applied_transfer'],cr:['applied_val']},
+  cogs:{dr:['cogs_val'],cr:[]},
+  moh:{dr:['moh_mat','moh_labor','moh_other','moh_over'],cr:['moh_applied','moh_under']},
+  'var':{dr:['var_under'],cr:['var_over']}
+};
+
+function recalculate(){
+  var src,i,val;
+  for(src in flows){val=getVal(src);for(i=0;i<flows[src].length;i++) setAuto(flows[src][i],val);}
+  setAuto('mat_end', getVal('mat_beg')+getVal('mat_purchase')-getVal('mat_direct')-getVal('mat_indirect'));
+  setAuto('wip_end', getVal('wip_beg')+getVal('wip_mat')+getVal('wip_labor')+getVal('wip_applied')-getVal('wip_finished'));
+  setAuto('fg_end',  getVal('fg_beg')+getVal('fg_finished')-getVal('fg_cogs'));
+  var actual=getVal('moh_mat')+getVal('moh_labor')+getVal('moh_other');
+  var applied=getVal('moh_applied'), diff=applied-actual;
+  if(diff>0){setAuto('moh_over',diff);setAuto('moh_under',0);}
+  else if(diff<0){setAuto('moh_under',-diff);setAuto('moh_over',0);}
+  else{setAuto('moh_over',0);setAuto('moh_under',0);}
+  setAuto('var_under',getVal('moh_under'));
+  setAuto('var_over',getVal('moh_over'));
+  var k,a,dt,ct,j;
+  for(k in accts){
+    a=accts[k]; dt=0; ct=0;
+    for(j=0;j<a.dr.length;j++) dt+=getVal(a.dr[j]);
+    for(j=0;j<a.cr.length;j++) ct+=getVal(a.cr[j]);
+    setTot(k+'_dt',dt);
+    if(a.cr.length) setTot(k+'_ct',ct);
+  }
+  saveState();
+}
+
+var inputs=document.querySelectorAll('.row input');
+var lastInput=null, lastLabel='';
+
+function wireInput(el){
+  var isAuto=el.hasAttribute('data-auto');
+  el.addEventListener('focus',function(){
+    var v=parse(el.value);
+    el.value=v?String(v):'';
+    el.select();
+    lastInput=el;
+    var row=el.closest('.row'), lb=row?row.querySelector('.lbl'):null;
+    lastLabel=lb?lb.textContent.trim():el.id;
+    updateInsBtn();
+  });
+  el.addEventListener('input',function(){
+    if(isAuto&&el.value.trim()!==''){overrides[el.id]=1;el.classList.add('override');}
+    recalculate();
+  });
+  el.addEventListener('blur',function(){
+    var v=parse(el.value);
+    if(el.value.trim()===''||(!v&&v!==0)){
+      if(isAuto){delete overrides[el.id];el.classList.remove('override');}
+      el.value='';recalculate();
+    } else { el.value=v?fmt(v):''; }
+  });
+}
+for(var k=0;k<inputs.length;k++) wireInput(inputs[k]);
+
+document.getElementById('btnClear').addEventListener('click',function(){
+  overrides={};
+  for(var i=0;i<inputs.length;i++){inputs[i].value='';inputs[i].classList.remove('override','flash');}
+  var k; for(k in accts){setTot(k+'_dt',0);if(accts[k].cr.length)setTot(k+'_ct',0);}
+  try{localStorage.removeItem('cost-hw');}catch(e){}
+});
+
+function saveState(){
+  try{
+    var d={},el;
+    for(var i=0;i<inputs.length;i++){el=inputs[i];if(el.value.trim())d[el.id]=el.value;}
+    d._ov=Object.keys(overrides);
+    localStorage.setItem('cost-hw',JSON.stringify(d));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    var raw=localStorage.getItem('cost-hw');if(!raw)return;
+    var d=JSON.parse(raw);if(!d)return;
+    if(d._ov){for(var i=0;i<d._ov.length;i++)overrides[d._ov[i]]=1;}
+    var id,el;
+    for(id in d){
+      if(id==='_ov')continue;
+      el=document.getElementById(id);
+      if(el){el.value=d[id];if(overrides[id])el.classList.add('override');}
+    }
+    recalculate();
+  }catch(e){}
+}
+loadState();
+
+/* CALCULATOR */
+var C={
+  val:'0', expr:'', prev:null, op:null, fresh:true,
+  digit:function(d){
+    if(this.fresh){this.val=d;this.fresh=false;}
+    else{this.val=this.val==='0'?d:this.val+d;}
+  },
+  dot:function(){
+    if(this.fresh){this.val='0.';this.fresh=false;}
+    else if(!this.val.includes('.')){this.val+='.';}
+  },
+  oper:function(o){
+    if(this.prev!==null&&this.op&&!this.fresh) this.exec();
+    this.prev=parseFloat(this.val);
+    this.expr=fmtC(this.prev)+' '+o;
+    this.op=o; this.fresh=true;
+  },
+  exec:function(){
+    if(this.prev===null||!this.op) return;
+    var a=this.prev,b=parseFloat(this.val),r;
+    switch(this.op){
+      case'+':r=a+b;break;case'−':r=a-b;break;
+      case'×':r=a*b;break;case'÷':r=b?a/b:NaN;break;
+      default:r=b;
+    }
+    r=Math.round(r*1e10)/1e10;
+    this.val=String(r); this.prev=r;
+  },
+  equals:function(){
+    if(this.prev===null||!this.op) return;
+    var a=this.prev, b=parseFloat(this.val), sym=this.op;
+    this.exec();
+    this.expr=fmtC(a)+' '+sym+' '+fmtC(b)+' =';
+    this.op=null; this.prev=null; this.fresh=true;
+  },
+  clear:function(){this.val='0';this.expr='';this.prev=null;this.op=null;this.fresh=true;},
+  back:function(){
+    if(this.fresh) return;
+    this.val=this.val.length>1?this.val.slice(0,-1):'0';
+  },
+  pct:function(){this.val=String(parseFloat(this.val)/100);this.fresh=true;},
+  getDisplay:function(){
+    var n=parseFloat(this.val);
+    if(isNaN(n)) return 'Error';
+    if(!this.fresh) return this.val;
+    return fmtC(n);
+  },
+  getNum:function(){ return parseFloat(this.val)||0; }
+};
+
+function renderCalc(){
+  document.getElementById('cExpr').textContent=C.expr;
+  document.getElementById('cDisp').textContent=C.getDisplay();
+}
+
+var cks=document.querySelectorAll('.ck');
+for(var i=0;i<cks.length;i++){
+  (function(btn){
+    btn.addEventListener('click',function(){
+      var k=btn.dataset.k;
+      if(k>='0'&&k<='9') C.digit(k);
+      else if(k==='.') C.dot();
+      else if(k==='+'||k==='−'||k==='×'||k==='÷') C.oper(k);
+      else if(k==='=') C.equals();
+      else if(k==='C') C.clear();
+      else if(k==='⌫') C.back();
+      else if(k==='%') C.pct();
+      renderCalc();
+    });
+  })(cks[i]);
+}
+
+var calcEl=document.getElementById('calc');
+var fabEl=document.getElementById('fab');
+var calcOpen=false;
+
+function toggleCalc(){
+  calcOpen=!calcOpen;
+  calcEl.classList.toggle('open',calcOpen);
+  fabEl.classList.toggle('gone',calcOpen);
+}
+fabEl.addEventListener('click',toggleCalc);
+document.getElementById('calcX').addEventListener('click',toggleCalc);
+
+var insBtn=document.getElementById('calcIns');
+function updateInsBtn(){
+  if(lastLabel){
+    insBtn.textContent='ใส่ค่า → '+lastLabel;
+    insBtn.disabled=false;
+  } else {
+    insBtn.textContent='ใส่ค่า (เลือกช่องก่อน)';
+    insBtn.disabled=true;
+  }
+}
+insBtn.addEventListener('click',function(){
+  if(!lastInput) return;
+  var n=C.getNum();
+  lastInput.value = n===0?'0':fmt(n);
+  if(lastInput.hasAttribute('data-auto')){overrides[lastInput.id]=1;lastInput.classList.add('override');}
+  recalculate();
+  toggleCalc();
+  lastInput.focus();
+});
+
+document.addEventListener('keydown',function(e){
+  if(!calcOpen) return;
+  if(document.activeElement&&document.activeElement.tagName==='INPUT') return;
+  var k=e.key,handled=true;
+  if(k>='0'&&k<='9') C.digit(k);
+  else if(k==='.') C.dot();
+  else if(k==='+') C.oper('+');
+  else if(k==='-') C.oper('−');
+  else if(k==='*') C.oper('×');
+  else if(k==='/') C.oper('÷');
+  else if(k==='Enter'||k==='=') C.equals();
+  else if(k==='Escape') toggleCalc();
+  else if(k==='Backspace') C.back();
+  else if(k==='Delete') C.clear();
+  else if(k==='%') C.pct();
+  else handled=false;
+  if(handled){e.preventDefault();renderCalc();}
+});
+
+})();
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+</script>
+
+</body>
+</html>
