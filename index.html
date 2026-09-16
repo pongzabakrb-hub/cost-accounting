@@ -21,7 +21,7 @@
   --hdr:#1a2744;--hdr-t:#f0ebe0;
   --dr:#1a2744;--cr:#c2342e;
   --in-bg:#fffcf5;--in-b:#c8c0ae;
-  --au-bg:transparent;--au-b:#b0a898;--au-t:#706a5e;
+  --au-bg:#e8f3dc;--au-b:#7fae63;--au-t:#2f5e1f;
   --txt:#2a2830;--txt2:#807a6e;--lbl:#4a4440;
   --line:#1a2744;--rule:#d8d0c0;--acc:#7a9ec0;
   --flash:#f0e8a0;--div:#d8d0c2;--neg:#c2342e;
@@ -41,7 +41,7 @@
   --hdr:#1a2030;--hdr-t:#e6a520;
   --dr:#4da8b8;--cr:#e07070;
   --in-bg:#161c28;--in-b:#2e3644;
-  --au-bg:rgba(104,168,104,.06);--au-b:#2e4a2e;--au-t:#68a868;
+  --au-bg:rgba(104,168,104,.22);--au-b:#5a9a5a;--au-t:#9fe09f;
   --txt:#ccc8c0;--txt2:#8a9098;--lbl:#8a8e98;
   --line:#2e3644;--rule:#2a3040;--acc:#e6a520;
   --flash:rgba(104,168,104,.15);--div:#2a3040;--neg:#e07070;
@@ -59,7 +59,7 @@
   --hdr:#1a2030;--hdr-t:#e6a520;
   --dr:#4da8b8;--cr:#e07070;
   --in-bg:#161c28;--in-b:#2e3644;
-  --au-bg:rgba(104,168,104,.06);--au-b:#2e4a2e;--au-t:#68a868;
+  --au-bg:rgba(104,168,104,.22);--au-b:#5a9a5a;--au-t:#9fe09f;
   --txt:#ccc8c0;--txt2:#8a9098;--lbl:#8a8e98;
   --line:#2e3644;--rule:#2a3040;--acc:#e6a520;
   --flash:rgba(104,168,104,.15);--div:#2a3040;--neg:#e07070;
@@ -91,9 +91,9 @@ input:focus-visible{outline:none}
 
 /* ─── app bar ─── */
 .bar{position:sticky;top:0;z-index:50;background:var(--hdr);color:var(--hdr-t);
-  padding:10px 16px;display:flex;align-items:center;gap:10px}
-.bar h1{margin:0;font-size:16px;font-weight:700;letter-spacing:.01em;white-space:nowrap;flex:1}
-.bar-r{display:flex;align-items:center;gap:6px}
+  padding:10px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.bar h1{margin:0;font-size:24px;font-weight:700;letter-spacing:.01em;white-space:nowrap;grid-column:2;text-align:center}
+.bar-r{display:flex;align-items:center;gap:6px;grid-column:3;justify-self:end}
 .bar-btn{padding:5px 12px;border:1px solid rgba(255,255,255,.18);border-radius:4px;
   background:transparent;color:var(--hdr-t);font-family:inherit;font-size:12px;
   font-weight:600;cursor:pointer;transition:background .15s}
@@ -105,11 +105,12 @@ input:focus-visible{outline:none}
 .nav{display:flex;gap:0;padding:0 16px;justify-content:center;
   border-bottom:1px solid var(--div);background:var(--card)}
 .nav-btn{padding:10px 20px;border:none;border-bottom:2px solid transparent;
-  background:transparent;color:var(--txt2);font-family:inherit;font-size:13px;
-  font-weight:600;cursor:pointer;transition:color .15s,border-color .15s}
+  background:transparent;color:var(--txt2);font-family:inherit;font-size:16px;
+  font-weight:700;cursor:pointer;transition:color .15s,border-color .15s}
 .nav-btn:hover{color:var(--txt)}
 .nav-btn.active{color:var(--nav-act);border-bottom-color:var(--nav-act)}
 
+.sub-nav[hidden]{display:none}
 .sub-nav{display:flex;gap:0;padding:0 16px;justify-content:center;background:var(--card)}
 .sub-btn{padding:7px 16px;border:none;border-bottom:2px solid transparent;
   background:transparent;color:var(--txt2);font-family:inherit;font-size:12px;
@@ -147,7 +148,7 @@ main{padding:14px 16px 68px;max-width:980px;margin:0 auto}
 @keyframes card-in{from{opacity:.6;transform:translateY(5px)}}
 @media(prefers-reduced-motion:reduce){.acct{animation:none}}
 
-.acct-n{background:var(--hdr);color:var(--hdr-t);padding:7px 10px;font-size:13px;
+.acct-n{background:var(--hdr);color:var(--hdr-t);padding:8px 10px;font-size:16px;
   font-weight:600;text-align:center;letter-spacing:.02em;line-height:1.35}
 .acct-n small{font-size:11px;font-weight:400;opacity:.8}
 .acct-b{display:grid;grid-template-columns:1fr 1fr}
@@ -157,7 +158,7 @@ main{padding:14px 16px 68px;max-width:980px;margin:0 auto}
 }
 .side{padding:7px 8px 8px;display:flex;flex-direction:column;gap:3px}
 .side.dr{border-right:2px solid var(--line)}
-.sh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.sh{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
 .side.dr .sh{color:var(--dr)} .side.cr .sh{color:var(--cr)}
 
 /* ─── input rows ─── */
@@ -306,7 +307,7 @@ main{padding:14px 16px 68px;max-width:980px;margin:0 auto}
   .row input,.tot .v{width:62px;min-width:62px;font-size:11.5px}
   .row .lbl{font-size:11px}
   .acct-n{font-size:12px}
-  .bar h1{font-size:14px}
+  .bar h1{font-size:18px}
   .nav-btn{padding:8px 14px;font-size:12px}
   .sub-btn{padding:6px 12px;font-size:11px}
 }

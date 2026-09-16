@@ -1,4 +1,4 @@
-var CACHE = 'cost-v4';
+var CACHE = 'cost-v5';
 var ASSETS = ['./', './index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', function (e) {
